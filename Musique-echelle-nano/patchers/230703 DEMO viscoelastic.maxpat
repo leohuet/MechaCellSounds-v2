@@ -40,21 +40,6 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"fontname" : "Futura Bk",
-					"fontsize" : 24.0,
-					"id" : "obj-16",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 1613.962644567092411, 30.433414738178271, 284.0, 38.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 294.880928976195264, 227.0, 266.0, 38.0 ],
-					"text" : "Step 1 : Data processing"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"bubble" : 1,
 					"bubbleside" : 2,
 					"id" : "obj-9",
@@ -1407,66 +1392,6 @@
 			}
 , 			{
 				"box" : 				{
-					"bubble" : 1,
-					"bubbleside" : 3,
-					"id" : "obj-52",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 14.526313066482544, 47.457363247871399, 151.0, 37.0 ],
-					"presentation" : 1,
-					"presentation_linecount" : 3,
-					"presentation_rect" : [ 38.380928976195264, 37.0, 121.0, 51.0 ],
-					"text" : "Check this first for all the requirements"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"activebgcolor" : [ 0.250980392156863, 0.203921568627451, 0.937254901960784, 1.0 ],
-					"activetextcolor" : [ 0.898039, 0.898039, 0.898039, 1.0 ],
-					"bgcolor" : [ 0.250980392156863, 0.203921568627451, 0.937254901960784, 1.0 ],
-					"id" : "obj-51",
-					"maxclass" : "live.text",
-					"mode" : 0,
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"parameter_enable" : 1,
-					"patching_rect" : [ 291.026313066482544, 233.221782184839185, 125.0, 45.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 165.0, 37.0, 136.0, 44.0 ],
-					"saved_attribute_attributes" : 					{
-						"activebgcolor" : 						{
-							"expression" : "themecolor.live_midi_assignment"
-						}
-,
-						"activetextcolor" : 						{
-							"expression" : "themecolor.theme_editing_bgcolor"
-						}
-,
-						"bgcolor" : 						{
-							"expression" : "themecolor.live_midi_assignment"
-						}
-,
-						"valueof" : 						{
-							"parameter_enum" : [ "val1", "val2" ],
-							"parameter_longname" : "live.text[17]",
-							"parameter_mmax" : 1,
-							"parameter_shortname" : "live.text[17]",
-							"parameter_type" : 2
-						}
-
-					}
-,
-					"text" : "Before using the patch",
-					"varname" : "live.text[10]"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"bgcolor" : [ 0.231372549019608, 0.815686274509804, 0.219607843137255, 1.0 ],
 					"fontname" : "Arial Bold",
 					"hint" : "",
@@ -1489,105 +1414,6 @@
 			}
 , 			{
 				"box" : 				{
-					"bgcolor" : [ 0.231372549019608, 0.815686274509804, 0.219607843137255, 1.0 ],
-					"fontname" : "Arial Bold",
-					"hint" : "",
-					"id" : "obj-47",
-					"ignoreclick" : 1,
-					"legacytextcolor" : 1,
-					"maxclass" : "textbutton",
-					"numinlets" : 1,
-					"numoutlets" : 3,
-					"outlettype" : [ "", "", "int" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 202.526313066482544, 6.721782184839185, 20.0, 20.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 264.166643261909485, 236.0, 20.0, 20.0 ],
-					"rounded" : 60.0,
-					"text" : "2",
-					"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bubble" : 1,
-					"id" : "obj-46",
-					"linecount" : 4,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 139.026313066482544, 33.721782184839185, 151.0, 64.0 ],
-					"presentation" : 1,
-					"presentation_linecount" : 3,
-					"presentation_rect" : [ 627.095214690481043, 412.5, 181.0, 51.0 ],
-					"text" : "Finally, click on the process files button to generate the csv files and pictures "
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bubble" : 1,
-					"bubbleside" : 3,
-					"id" : "obj-43",
-					"linecount" : 3,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 45.526313066482544, 40.457363247871399, 151.0, 51.0 ],
-					"presentation" : 1,
-					"presentation_linecount" : 3,
-					"presentation_rect" : [ 52.095214690481043, 419.5, 135.0, 51.0 ],
-					"text" : "2 : Put all the excel data files in a folder then drop it here"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgcolor" : [ 0.231372549019608, 0.815686274509804, 0.219607843137255, 1.0 ],
-					"fontname" : "Arial Bold",
-					"hint" : "",
-					"id" : "obj-45",
-					"ignoreclick" : 1,
-					"legacytextcolor" : 1,
-					"maxclass" : "textbutton",
-					"numinlets" : 1,
-					"numoutlets" : 3,
-					"outlettype" : [ "", "", "int" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 210.0, 66.020143866539001, 20.0, 20.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 16.380928976195264, 52.5, 20.0, 20.0 ],
-					"rounded" : 60.0,
-					"text" : "1",
-					"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bgmode" : 0,
-					"border" : 0,
-					"clickthrough" : 0,
-					"enablehscroll" : 0,
-					"enablevscroll" : 0,
-					"id" : "obj-30",
-					"lockeddragscroll" : 0,
-					"lockedsize" : 0,
-					"maxclass" : "bpatcher",
-					"name" : "shell-oper.maxpat",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"offset" : [ 0.0, 0.0 ],
-					"patching_rect" : [ 1516.962644567092411, 80.0, 478.0, 235.0 ],
-					"presentation" : 1,
-					"presentation_rect" : [ 175.380928976195264, 271.5, 505.0, 221.0 ],
-					"viewvisibility" : 1
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-32",
 					"linecount" : 3,
 					"maxclass" : "comment",
@@ -1595,7 +1421,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 182.166643261909485, 26.0, 150.0, 47.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 538.166643261909485, 66.0, 342.0, 20.0 ],
+					"presentation_rect" : [ 100.166643261909485, 85.0, 342.0, 20.0 ],
 					"text" : "Control interface for Musique à l'échelle nanométrique project. "
 				}
 
@@ -4662,7 +4488,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 14.526313066482544, 21.721782184839185, 284.0, 70.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 469.166643261909485, 22.0, 458.0, 38.0 ],
+					"presentation_rect" : [ 31.166643261909485, 41.0, 458.0, 38.0 ],
 					"text" : "MUSIQUE À L'ÉCHELLE NANOMÉTRIQUE"
 				}
 
@@ -4719,6 +4545,31 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 14.526313066482544, 176.566585261821729, 452.011827230453491, 192.866829476356543 ],
 					"proportion" : 0.5
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"args" : [ "user1" ],
+					"bgmode" : 0,
+					"border" : 0,
+					"clickthrough" : 0,
+					"enablehscroll" : 0,
+					"enablevscroll" : 0,
+					"id" : "obj-6",
+					"lockeddragscroll" : 0,
+					"lockedsize" : 0,
+					"maxclass" : "bpatcher",
+					"name" : "adding_user.maxpat",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"offset" : [ 0.0, 0.0 ],
+					"outlettype" : [ "multichannelsignal", "" ],
+					"patching_rect" : [ 250.0, 600.0, 166.0, 325.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 250.0, 550.0, 166.0, 325.0 ],
+					"varname" : "user1",
+					"viewvisibility" : 1
 				}
 
 			}
@@ -4830,6 +4681,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-6", 0 ],
+					"source" : [ "obj-25", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-1", 4 ],
 					"source" : [ "obj-27", 0 ]
 				}
@@ -4879,13 +4737,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-53", 0 ],
-					"source" : [ "obj-51", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-1", 9 ],
 					"source" : [ "obj-56", 0 ]
 				}
@@ -4902,6 +4753,20 @@
 				"patchline" : 				{
 					"destination" : [ "obj-1", 7 ],
 					"source" : [ "obj-59", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-25", 0 ],
+					"source" : [ "obj-6", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-73", 0 ],
+					"source" : [ "obj-6", 0 ]
 				}
 
 			}
@@ -4964,16 +4829,37 @@
  ],
 		"parameters" : 		{
 			"obj-25::obj-19" : [ "live.text", "live.text", 0 ],
-			"obj-30::obj-1" : [ "live.text[16]", "live.text", 0 ],
-			"obj-30::obj-13" : [ "live.text[18]", "live.text", 0 ],
-			"obj-30::obj-9" : [ "live.drop", "live.drop", 0 ],
 			"obj-4::obj-115" : [ "live.drop[1]", "live.drop", 0 ],
 			"obj-4::obj-121" : [ "live.menu[8]", "live.menu[1]", 0 ],
 			"obj-4::obj-132" : [ "live.dial[3]", " ", 0 ],
-			"obj-51" : [ "live.text[17]", "live.text[17]", 0 ],
 			"obj-53::obj-18" : [ "live.text[22]", "live.text[22]", 0 ],
 			"obj-53::obj-26" : [ "live.text[34]", "live.text[22]", 0 ],
 			"obj-53::obj-31" : [ "live.text[35]", "live.text[22]", 0 ],
+			"obj-6::obj-21" : [ "user_volume", "level", 0 ],
+			"obj-6::obj-24" : [ "live.text[31]", "live.text[10]", 0 ],
+			"obj-6::obj-2::obj-17::obj-61" : [ "number[4]", "number[4]", 0 ],
+			"obj-6::obj-2::obj-17::obj-68" : [ "number[5]", "number[3]", 0 ],
+			"obj-6::obj-2::obj-39::obj-8::obj-101::obj-114" : [ "flonum[4]", "flonum", 0 ],
+			"obj-6::obj-2::obj-39::obj-8::obj-101::obj-115" : [ "number[6]", "number", 0 ],
+			"obj-6::obj-2::obj-39::obj-8::obj-105" : [ "live.dial[5]", "live.dial", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-14" : [ "lowpass", "lowpass", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-16" : [ "highpass", "highpass", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-17" : [ "WarbleSpeed", "speed", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-20" : [ "WarbleAmount", "amount", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-22" : [ "inertia", "inertia", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-25" : [ "wet/dry", "dry/wet", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-27" : [ "revtime", "revtime", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-35" : [ "reverb_wetdry", "level", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-4" : [ "feedback", "feedback", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-5" : [ "clipping", "clipping", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-13::obj-8" : [ "live.menu", "live.menu", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-2::obj-14" : [ "wet_dry", "dry/wet", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-2::obj-58" : [ "left_delay[4]", "L delay", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-2::obj-59" : [ "left_modfreq[4]", "L freq", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-2::obj-60" : [ "left_moddepth[4]", "L depth", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-2::obj-62" : [ "left_feedback[4]", "L FB", 0 ],
+			"obj-6::obj-2::obj-45::obj-11::obj-11::obj-41" : [ "wet_dry[18]", "dry/wet", 0 ],
+			"obj-6::obj-7" : [ "live.text[33]", "live.text", 0 ],
 			"obj-71::obj-11" : [ "live.text[4]", "live.text", 0 ],
 			"obj-71::obj-110" : [ "live.text[5]", "live.text", 0 ],
 			"obj-71::obj-16" : [ "live.text[1]", "live.text", 0 ],
@@ -5008,8 +4894,82 @@
 		}
 ,
 		"dependency_cache" : [ 			{
+				"name" : "USER.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "adding_user.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "bufGranul~.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "coolelasticsf.txt",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/data",
+				"patcherrelativepath" : "../data",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "elastic_zones.js",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/code",
+				"patcherrelativepath" : "../code",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "fit_jweb_to_bounds.js",
 				"bootpath" : "C74:/packages/Node for Max/patchers/debug-monitor",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "macrophage1_Zc.png",
+				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/media/pics",
+				"patcherrelativepath" : "../../../../../../MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/media/pics",
+				"type" : "PNG",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "macrophage1_Zc_scale.png",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/media/pics",
+				"patcherrelativepath" : "../media/pics",
+				"type" : "PNG",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mc.pluggo.dryWet2~.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mc.spaceecho.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mc.swirl.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "moyenne.js",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/code",
+				"patcherrelativepath" : "../code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
@@ -5020,15 +4980,22 @@
 				"implicit" : 1
 			}
 , 			{
+				"name" : "pan_calcul.gendsp",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "gDSP",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "pathfinder.maxpat",
-				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/patchers",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "positions.txt",
-				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/data",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/data",
 				"patcherrelativepath" : "../data",
 				"type" : "TEXT",
 				"implicit" : 1
@@ -5041,27 +5008,23 @@
 			}
 , 			{
 				"name" : "server.js",
-				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano",
 				"patcherrelativepath" : "..",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "shell-oper.maxpat",
-				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/patchers",
+				"name" : "socketreceive.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "shell.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "socketreceive.maxpat",
-				"bootpath" : "~/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/patchers",
-				"patcherrelativepath" : ".",
-				"type" : "JSON",
+				"name" : "sort_modulus.js",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/code",
+				"patcherrelativepath" : "../code",
+				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
@@ -5079,9 +5042,13 @@
 , 			{
 				"name" : "spat5.monitor.maxpat",
 				"bootpath" : "~/Documents/Max 8/Packages/spat5/patchers",
-				"patcherrelativepath" : "../../../../../Max 8/Packages/spat5/patchers",
+				"patcherrelativepath" : "../../../../../../Max 8/Packages/spat5/patchers",
 				"type" : "JSON",
 				"implicit" : 1
+			}
+, 			{
+				"name" : "spat5.pan~.mxo",
+				"type" : "iLaX"
 			}
 , 			{
 				"name" : "spat5.sofa.loader.mxo",
@@ -5092,8 +5059,50 @@
 				"type" : "iLaX"
 			}
 , 			{
+				"name" : "stiffSpat.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "stiffspats.txt",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/data",
+				"patcherrelativepath" : "../data",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "thru.maxpat",
 				"bootpath" : "C74:/patchers/m4l/Pluggo for Live resources/patches",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "viscousSpats.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "viscous_stiff_levels.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "viscousspats.txt",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/data",
+				"patcherrelativepath" : "../data",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "vocoder.maxpat",
+				"bootpath" : "~/Documents/TAFF/2025/250301_Mecasique V2/MechaCellSounds-v2/Musique-echelle-nano/patchers",
+				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
