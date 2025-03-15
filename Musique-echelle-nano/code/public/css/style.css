@@ -1,0 +1,380 @@
+/*---------------------------------------------------------------------
+File Name: style.css
+---------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------
+basic
+---------------------------------------------------------------------*/
+
+body {
+     position: absolute;
+     margin: 0;
+     padding: 0;
+     width: 100vw;
+     height: 100dvh;
+     overflow: hidden;
+     font-family: 'Futura', sans-serif;
+     background-color: white;
+     color: black;
+}
+
+canvas {
+     z-index: -10;
+     position: absolute;
+     width: 100%;
+     height: 100%;
+}
+
+#menu_debut {
+     position: absolute;
+     top: 0;
+     bottom: 0;
+     padding: 5px 20px;
+     background-color: white;
+     z-index: 10;
+}
+
+#menucell_div {
+     display: flex;
+     flex-direction: row;
+     justify-content: center;
+}
+
+#logos {
+     position: absolute;
+     right: 0;
+     left: 0;
+     bottom: 0;
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     margin-bottom: 20px;
+     padding: 0 50px;
+     justify-content: space-around;
+}
+
+#choix_user {
+     position: static;
+     flex-direction: column;
+     align-items: center;
+     justify-content: space-between;
+     top: 0;
+     left: 0;
+     bottom: 0;
+     right: 0;
+}
+
+#choix_user button {
+     display: block;
+     position: static;
+     flex-shrink: 1;
+     height: 50px;
+     width: 50px;
+     border: 2px solid black;
+     border-radius: 10px;
+     background-color: #666;
+     color: azure;
+     font-size: 20px;
+}
+
+@media(max-width: 600px) {
+     #menu_debut {
+          margin: 0 0;
+     }
+
+     .logoimg {
+          width: 40px;
+          height: 40px;
+     }
+
+     #choix_user {
+          margin: 10 10;
+     }
+
+     #pictureShowHide h6 {
+          margin-block-start: 0;
+          margin-block-end: 0;
+          font-size: 14px;
+          width: 40px;
+     }
+}
+
+@media (min-width: 600px) {
+     #menu_debut {
+          margin: 100 100;
+     }
+
+     .logoimg {
+          width: 80px;
+          height: 80px;
+     }
+
+     #menucell_div {
+          margin-top: 100px
+     }
+
+     #choix_user {
+          margin-top: 50px
+     }
+
+     #pictureShowHide h6 {
+          margin-block-start: 0;
+          margin-block-end: 0;
+          font-size: 16px;
+          width: 150px;
+     }
+}
+
+#sketch {
+     display: -webkit-flex;
+     align-items: start;
+     justify-content: flex-end;
+     margin-top: 80px;
+     margin-right: 0px;
+     height: auto;
+}
+
+#choix_cell {
+     position: absolute;
+     top: 0;
+     right: 20px;
+     left: 20px;
+}
+
+#pictureShowHide {
+     opacity: 0;
+     margin-top: 20px;
+     height: 10%;
+     font-size: 10px;
+}
+
+#imageswitch {
+     width: 55;
+     height: 30;
+}
+
+#section_bottom {
+     position: block;
+     display: none;
+     flex-direction: row;
+     align-items: center;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     margin: 10px 30px;
+}
+
+#legende {
+     display: none;
+     z-index: 2;
+     margin-top: 10px;
+     margin-right: 10px;
+     background-color: white;
+     border-radius: 10px;
+     padding: 4px;
+}
+
+#legendeimg {
+     display: block;
+     position: static;
+     height: 100%;
+     z-index: 3;
+     
+     opacity: 0;
+}
+
+#legendetxt {
+     display: block;
+     position: absolute;
+     opacity: 0;
+     z-index: 2;
+     top: 10%;
+     left: 0;
+     right: 0;
+     text-align: center;
+     background-color: white;
+     padding: 0 30;
+}
+
+/*---------------------------------------------------------------------
+Menu déroulant 
+---------------------------------------------------------------------*/
+
+#menu_cell {
+     font-size: 16px;
+}
+#menu_cell ul li {
+     position: relative;
+     float: left;
+     text-align: left;
+     min-width: 150px;
+     max-width: 220px;
+}
+
+#menu_cell ul::after {
+     content: "";
+     clear: both;
+     display: table;
+}
+
+#menu_cell ul li a {
+     display: block;
+     padding: 8px 8px;
+     text-decoration: none;
+     text-align: center;
+     border-bottom: 2px solid transparent;
+}
+
+#menu_cell ul li a:hover {
+     color: orange;
+     border-bottom: 2px solid gold;
+}
+
+.deroulant > a::after{
+     content: "\25BC";
+     font-size: 10px;
+     margin-left: 5px;
+}
+
+.deroulant a {
+     overflow: hidden;
+}
+
+#sous{
+     position: absolute;
+     display: none;
+     flex-direction: column;
+     align-items: left;
+     justify-content: start;
+     margin-bottom: 20px;
+     margin-left: 0;
+     box-shadow: 0px 1px 2px #CCC;
+     background-color: #111;
+     z-index: 10;
+     width: 100%;
+}
+
+#sous li{
+     float: none;
+     text-align: center;
+}
+
+#sous li a{
+     background-color: aliceblue;
+     overflow: hidden;
+}
+
+@media screen  and (orientation: portrait) {
+     #menu_cell ul{
+          float: left;
+          list-style-type: none;
+          padding-inline-start: 0px;
+          margin-block-start: 20px;
+          margin-block-end: 20px;
+     }
+}
+
+@media screen  and (orientation: landscape) {
+     #menu_cell ul{
+          list-style-type: none;
+          padding-inline-start: 0px;
+          margin-block-start: 0px;
+          margin-block-end: 20px;
+     }
+}
+
+/*---------------------------------------------------------------------
+Sound Toggles
+---------------------------------------------------------------------*/
+
+#pictureShowHide {
+     display: none;
+}
+
+#viscousToggle:checked + .toggle {
+     background-color: aqua;
+}
+
+#stiffToggle:checked + .toggle {
+     background-color: red;
+}
+
+#elasticToggle:checked + .toggle {
+     background-color: blue;
+}
+
+
+.sound_toggles {
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     margin-bottom: 20px;
+}
+
+.sound_toggles2 {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin-bottom: 10px;
+     flex: auto;
+}
+
+.sound_toggles h6 {
+     margin: 0 10px;
+     font-family: "Futura", sans-serif;
+     font-size: 16px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+     position: relative;
+     display: inline-block;
+     width: 60px;
+     height: 34px;
+}
+
+
+   
+/* Hide default HTML checkbox */
+.switch input {
+     opacity: 0;
+     width: 0;
+     height: 0;
+}
+   
+/* The toggle */
+.toggle {
+     position: absolute;
+     cursor: pointer;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     border-radius: 34px;
+     background-color: #ccc;
+     -webkit-transition: .4s;
+     transition: .4s;
+}
+   
+.toggle:before {
+     position: absolute;
+     content: "";
+     height: 80%;
+     width: 45%;
+     left: 4px;
+     bottom: 4px;
+     border-radius: 50%;
+     background-color: white;
+     -webkit-transition: .4s;
+     transition: .4s;
+}
+
+input:checked + .toggle {
+     background-color: orange;
+}
+
+input:checked + .toggle:before {
+     -webkit-transform: translateX(26px);
+     -ms-transform: translateX(26px);
+     transform: translateX(26px);
+}
