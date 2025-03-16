@@ -147,23 +147,6 @@ document.body.addEventListener("mouseup", function(){
 });
 
 
-
-// Functions handling the pressure (when available on your device)
-Pressure.set('body', {
-    start: function(){
-        pressure = true;
-    },
-    end: function(){
-
-    },
-    change: function(force, event){
-        // sizeCercle(force, true);
-    },
-    unsupported: function(){
-        pressure = false;
-    }
-});
-
 var old_x = 0;
 var old_y = 0;
 
@@ -171,12 +154,6 @@ var old_y = 0;
 function send_xy(x, y, size){
     message = `${user} ${x} ${y} ${size}`;
     socket.send(message);
-    if(Math.abs(x-old_x)*100<1 && Math.abs(y-old_y)*100<1 && !pressure){
-        // sizeCercle(0, false);
-    }
-    else if(!pressure){
-        // resetForce();
-    }
     sleep(200);
     old_x = x;
     old_y = y;

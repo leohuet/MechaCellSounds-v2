@@ -1,6 +1,5 @@
 var socket = io();
 socket.connect('http://127.0.0.1:8000');
-var pressure = false;
 var user = 0;
 
 var settings_on = false;
@@ -74,7 +73,8 @@ socket.on("users", function(users_list, id, cells_names){
 // It sends a message to the server to tell which user is chosen
 // It hides the buttons and shows the canvas
 function choixUser(user_sel){
-    translateMenu()
+    translateMenu();
+    playAudio();
     user = user_sel;
     console.log('user' + user + ' choisi');
     user_launched = true;
@@ -146,21 +146,17 @@ document.body.addEventListener("touchend", function(){
     }
 });
 
-
-
-// Functions handling the pressure (when available on your device)
-Pressure.set('body', {
-    start: function(){
-        pressure = true;
-    },
-    end: function(){
-
-    },
-    change: function(force, event){
-        // sizeCercle(force, true);
-    },
-    unsupported: function(){
-        pressure = false;
+document.getElementById("sketch").addEventListener("mousedown", function(){
+    showLegende(0);
+    console.log('mouse');
+    // touch_cell = is_on_cell();
+    if(user_launched && !settings_on){
+        socket.send(`${user} touch 1`);
+    }
+});
+document.body.addEventListener("mouseup", function(){
+    if(user_launched && !settings_on){
+        socket.send(`${user} touch 0`);
     }
 });
 
@@ -171,12 +167,6 @@ var old_y = 0;
 function send_xy(x, y, size){
     message = `${user} ${x} ${y} ${size}`;
     socket.emit("coordonates", [user, x, y, size]);
-    if(Math.abs(x-old_x)*100<1 && Math.abs(y-old_y)*100<1 && !pressure){
-        // sizeCercle(0, false);
-    }
-    else if(!pressure){
-        // resetForce();
-    }
     sleep(200);
     old_x = x;
     old_y = y;
@@ -335,3 +325,8 @@ function showLegende(onoff){
     }
     
 }
+
+socket.on("stiffness", function(data){
+    console.log(data);
+    changeVolume(data);
+});
