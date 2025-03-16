@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 87.0, 1852.0, 959.0 ],
+		"rect" : [ 34.0, 100.0, 1444.0, 848.0 ],
 		"bglocked" : 1,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -205,7 +205,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 266.0, 370.0, 702.0, 504.0 ],
+						"rect" : [ 128.0, 323.0, 702.0, 504.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1447,7 +1447,7 @@
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 605.0, 513.0, 551.0, 387.0 ],
+										"rect" : [ 199.0, 126.0, 551.0, 387.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -1736,7 +1736,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 561.380950123071671, 915.0, 479.416163474321365, 22.0 ],
+									"patching_rect" : [ 561.380950123071671, 922.0, 479.416163474321365, 22.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -2107,7 +2107,7 @@
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 34.0, 100.0, 695.0, 959.0 ],
+										"rect" : [ 34.0, 100.0, 695.0, 848.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -2902,7 +2902,7 @@
 									"outlettype" : [ "", "", "", "", "" ],
 									"patching_rect" : [ 579.0, 751.742976427078247, 461.797113597393036, 22.0 ],
 									"saved_object_attributes" : 									{
-										"filename" : "/Users/poire/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/code/sort_modulus.js",
+										"filename" : "/Users/poire/Documents/TAFF/2025/250301_Mecasique/sort_modulus.js",
 										"parameter_enable" : 0
 									}
 ,
@@ -2999,11 +2999,11 @@
 									"background" : 1,
 									"bubble" : 1,
 									"id" : "obj-21",
-									"linecount" : 7,
+									"linecount" : 6,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 636.5, 304.104477089643524, 149.0, 104.0 ],
+									"patching_rect" : [ 636.5, 304.104477089643524, 152.0, 91.0 ],
 									"text" : "Get each csv path and add it to a list, to then send it to the javascript for initalisation (opening of the files, calcul of max and min data)."
 								}
 
@@ -8467,7 +8467,6 @@
 										"style" : "",
 										"subpatcher_template" : "",
 										"assistshowspatchername" : 0,
-										"visible" : 1,
 										"boxes" : [ 											{
 												"box" : 												{
 													"bubble" : 1,
@@ -9063,7 +9062,7 @@
 													"outlettype" : [ "", "", "", "", "" ],
 													"patching_rect" : [ 836.0, 246.0, 105.0, 22.0 ],
 													"saved_object_attributes" : 													{
-														"filename" : "/Users/poire/Documents/MASTER/GMEM/MEN_GMU-Strategy/Musique-echelle-nano/code/elastic_zones.js",
+														"filename" : "/Users/poire/Documents/TAFF/2025/250301_Mecasique/elastic_zones.js",
 														"parameter_enable" : 0
 													}
 ,
@@ -13977,7 +13976,7 @@
 					"displayknob" : 1,
 					"id" : "obj-18",
 					"knobcolor" : [ 0.164705882352941, 0.164705882352941, 0.156862745098039, 1.0 ],
-					"knobsize" : 29.0,
+					"knobsize" : 5.0,
 					"maxclass" : "nodes",
 					"nodecolor" : [ 0.349019607843137, 0.349019607843137, 0.349019607843137, 0.0 ],
 					"nodesnames" : [ "1" ],

@@ -170,7 +170,7 @@ var old_y = 0;
 // Function to send the coordinates of the touch to the server
 function send_xy(x, y, size){
     message = `${user} ${x} ${y} ${size}`;
-    socket.send(message);
+    socket.emit("coordonates", [user, x, y, size]);
     if(Math.abs(x-old_x)*100<1 && Math.abs(y-old_y)*100<1 && !pressure){
         // sizeCercle(0, false);
     }

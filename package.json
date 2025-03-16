@@ -1,0 +1,35 @@
+{
+  "name": "mechacellsounds-v2",
+  "version": "1.0.0",
+  "description": "Ce repository est le suivi d'un travail de recherche en sonification de 6 mois, de mai à octobre 2023, dans le cadre d'une collaboration entre le [GMEM](https://www.gmem.org) et le [LAI](https://labadhesioninflammation.org), avec pour volonté de sonifier les données scientifiques issues des recherches du LAI.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leohuet/MechaCellSounds-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leohuet/MechaCellSounds-v2/issues"
+  },
+  "homepage": "https://github.com/leohuet/MechaCellSounds-v2#readme",
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "is": "^3.3.0",
+    "os": "^0.1.2",
+    "os-utils": "^0.0.14",
+    "path": "^0.12.7",
+    "socket.io": "^4.8.1",
+    "socket.io-adapter": "^2.5.5",
+    "socket.io-client": "^4.8.1",
+    "socket.io-parser": "^4.2.4",
+    "socketio": "^1.0.0"
+  }
+}
