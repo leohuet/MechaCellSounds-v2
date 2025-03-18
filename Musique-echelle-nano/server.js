@@ -1,13 +1,27 @@
 var app       =     require("express")();
 var express   =     require("express");
-var http      =     require('http').Server(app);
-var io        =     require("socket.io")(http);
+var http      =     require('http');
+var https     =     require('https');
+var { Server }        =     require("socket.io");
 const path    =     require('path');
 // const Max     =     require('max-api');
 const os      =     require('os');
 var fs        =     require('fs');
 const csv     =     require('csv-parser');
 const { clear } = require("console");
+const { env } = require("process");
+
+var options = {
+    key: fs.readFileSync(__dirname + '/code/public/key.pem'),
+    cert: fs.readFileSync(__dirname + '/code/public/cert.pem')
+};
+
+http.createServer(app).listen(80)
+const httpsServer = https.createServer(options, app);
+const io = new Server(httpsServer);
+httpsServer.listen(3000, () => {
+    console.log("Serveur HTTPS lancé sur https://localhost:3000");
+});
 
 var users_dict = {
     'ids': [],
@@ -23,7 +37,11 @@ for(i in files) {
     }
 }
 
+
 rows = ['Zc', 'E0Tn', 'betaTn'];
+let stiffonoff = true;
+let viscousonoff = true;
+let elasticonoff = true;
 
 temp_arrayf = new Array(3);
 moyenne_array = new Array(3);
@@ -54,9 +72,24 @@ let vitesse_moyenne = 0;
 let stiffness = 0;
 let viscosity = 0;
 let elasticity = 0;
+let filtered_viscosity = 0;
+let old_viscosity = 0;
+
+let envelop_changes = 0;
+let sf_changes = 0;
+
+let grain_length = 0;
+let grain_transpose = 0;
+let grain_frequency = 0;
 
 let old_x = 0;
 let last_point = [0.5, 0.5, 0];
+
+const toGranularValues = {
+    frequency: 15,
+    grainSize: 0.01,
+    transpose: true,
+};
 
 // ========== Pages ========== //
 // Allows acess to all files inside 'public' folder.
@@ -65,21 +98,6 @@ app.use(express.static(__dirname));
 // Configures each link to a different page.
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/code/public/index.html');
-});
-app.get("/1", function(req, res) {
-    res.sendFile(__dirname + '/code/public/1.html');
-});
-app.get("/2", function(req, res) {
-    res.sendFile(__dirname + '/code/public/2.html');
-});
-app.get("/3", function(req, res) {
-    res.sendFile(__dirname + '/code/public/3.html');
-});
-app.get("/4", function(req, res) {
-    res.sendFile(__dirname + '/code/public/4.html');
-});
-app.get("/computer", function(req, res) {
-    res.sendFile(__dirname + '/code/public/computer.html');
 });
 
 
@@ -293,8 +311,6 @@ function sort_values(x, y, s){
 		moyenne_array[e] = moyenne;
 	}
 
-    // console.log(vitesse_moyenne);
-
     moyenne_array[1] = (2*moyenne_array[1] - 1)*vitesse_moyenne;
     if(moyenne_array[1] > 1) moyenne_array[1] = 1;
     if(moyenne_array[1] < -1) moyenne_array[1] = -1;
@@ -313,6 +329,40 @@ function sort_values(x, y, s){
 
     io.emit('stiffness', viscosity);
 
+}
+
+function mapValues(){
+    if(stiffonoff){
+        if(touch == 1){
+            toGranularValues.frequency = (stiffness*3+2) + vitesse_moyenne*2;
+        }
+        else{
+            const startFrequency = toGranularValues.frequency;
+            const duration = viscosity*1000;
+            const steps = 100;
+            const increment = (0 - startFrequency) / steps;
+            const interval = duration / steps;
+
+            let currentStep = 0;
+
+            const intervalId = setInterval(() => {
+                if (currentStep < steps) {
+                    toGranularValues.frequency = startFrequency + increment * currentStep;
+                    currentStep++;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, interval);
+        }
+    }
+    else toGranularValues.frequency = 5;
+    toGranularValues.grainSize = viscosity*10+10;
+    filtered_viscosity = (viscosity + old_viscosity)/2;
+    old_viscosity = viscosity;
+    envelop_changes = Math.floor(viscosity*-3+5);
+    sf_changes = "TO DO";
+    toGranularValues.transpose = stiffness >= 0.5 ? true : false;
+    io.emit('granular-values', toGranularValues);
 }
 
 async function init(){
@@ -393,6 +443,7 @@ io.on('connection',function(socket){
             last_point = [x, y, s];
             calculVitesse(touch, last_point);
             sort_values(x, y, s);
+            mapValues();
         }
     });
 
@@ -403,20 +454,4 @@ io.on('connection',function(socket){
         users_dict['user_active'][index] = 1;
         // Max.outlet(index+1 + ' unlink');
     });
-});
-
-/*Max.addHandler("unlink", (user) => {
-    let num_user = user[4];
-    users_dict['user_active'][num_user-1] = 1;
-    Max.outlet(num_user + ' unlink');
-});
-
-Max.addHandler("users_count", (num) => {
-    users_dict['user_active'] = new Array(num).fill(1);
-    console.log(users_dict['user_active']);
-});*/
-
-port = 8000;
-http.listen(port,function(){
-    console.log("Listening on" + port);
 });
