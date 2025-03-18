@@ -13,7 +13,7 @@ class TriggerProcess extends AudioWorkletProcessor {
     constructor() {
         super();
         this._lastUpdate = currentTime;
-        this._frequency = 15;
+        this._frequency = 4;
 
         this.port.onmessage = (event) => {
             this._frequency = event.data;

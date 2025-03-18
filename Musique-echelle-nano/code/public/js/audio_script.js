@@ -1,12 +1,15 @@
-let head=0, pos=0, freq=15, old_freq = 1, grainSize = 0.01, pitch = 1;
+let head=0, pos=0, freq=15, old_freq = 1, grainSize = 0.01, pitch = 1, soundFile = 17;
 let transpose = true;
 let c,w,h;
 const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
 let triggerNode = null;
-let audioCtx, main, snd, duration;
+let audioCtx, main, viscousmain, stiffmain, snd, duration;
 
-let buffers = {};
+let granularBuffers = {};
+let viscousBuffers = {};
+let stiffBuffers = {};
+let elasticBuffers = {};
 let currentBuffer = null;
 
 
@@ -24,7 +27,6 @@ class TriggerNode extends AudioWorkletNode {
     super(audioCtx, 'trigger');
     this.counter_ = 0;
     this.port.onmessage = this.handleMessage_.bind(this);
-    console.log('[TriggerNode:constructor] created.');
   }
 
   handleMessage_(event) {
@@ -44,20 +46,26 @@ class TriggerNode extends AudioWorkletNode {
 }
 
 async function changeGranularValues(values) {
-    freq = values.frequency;
-    grainSize = values.grainSize;
-    transpose = values.transpose;
-    if (freq != old_freq) {
-        old_freq = freq;
-        triggerNode.port.postMessage(freq);
-    }
+  soundFile = values.soundFile;
+  changeBuffer(granularBuffers, soundFile);
+  freq = values.frequency;
+  grainSize = values.grainSize;
+  transpose = values.transpose;
+  if (freq != old_freq) {
+      old_freq = freq;
+      triggerNode.port.postMessage(freq);
+  }
+  viscousmain.gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
 }
 
 async function loadMultipleBuffers(fileList) {
+  let buffers = {};
   for (const fileName of fileList) {
       buffers[fileName] = await loadBuffer('./media/' + fileName);
   }
-  console.log("✅ Buffers chargés :", Object.keys(buffers));
+  buffers = Object.entries(buffers);
+  console.log("✅ Buffers chargés :", buffers);
+  return buffers;
 }
 
 // Fonction pour charger un buffer
@@ -67,29 +75,29 @@ async function loadBuffer(url) {
   return await audioCtx.decodeAudioData(arrayBuffer);
 }
 
-function changeBuffer(fileName) {
-  if (buffers[fileName]) {
-      currentBuffer = buffers[fileName];
-      console.log(`🔄 Changement de buffer : ${fileName}`);
+function changeBuffer(buffers, index) {
+  if (buffers[index]) {
+      currentBuffer = buffers[index][1];
+      duration = currentBuffer.duration;
   } else {
-      console.warn(`❌ Buffer ${fileName} non trouvé`);
+      console.warn(`❌ Buffer ${index} non trouvé`);
   }
 }
 
-async function setupGranular(){
+async function setupAudio(){
     init_audio();
-    await loadMultipleBuffers(["MetalTin57.wav", "strings.wav", "foret_percs.wav"]);
-    currentBuffer = buffers["MetalTin57.wav"];
-    duration = parseInt(currentBuffer.duration);
+    granularBuffers = await loadMultipleBuffers(["MetalTin57.mp3", "MetalTin104.mp3", "MetalTin105.mp3", "MetalTin110-2.mp3", "MetalTin106.mp3", "SpringMic3.mp3", "SpringMic4.mp3", 
+      "SpringMic1.mp3", "foret_percs.mp3", "crepitement.02.mp3", "Bubbles5.mp3", "strings.mp3", "bells.mp3", "AMB_MER_TOULON.mp3", "BakedBeans4.mp3", "DeepNoisySlime.mp3",
+      "granulatormix_visqueux1.mp3", "amb.mp3", "granulatormix_visqueux3.mp3", "granulatormix_visqueux2.mp3"
+    ]);
+    changeBuffer(granularBuffers, 17);
+    viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.wav", "viscous_comp_2.wav", "viscous_comp_3_1.aiff", "viscous_comp_3_2.aiff", "viscous_comp_4.wav", "viscous_GMU_1.aiff", 
+      "viscous_GMU_2.aiff"
+    ]);
+    playViscous(viscousBuffers);
     await audioCtx.audioWorklet.addModule('./code/public/js/trigger.js');
     triggerNode = new TriggerNode(audioCtx);
 }
-
-const loadbuf = url => new Promise(async (resolve, reject) => {
-    const res = await fetch(url)
-    const buf = await res.arrayBuffer()
-    audioCtx.decodeAudioData(buf, resolve, reject)
-});
 
 const particle = (pos=0, pan=0, amp=1, dur=0.01, rate=1) => {
     const now = audioCtx.currentTime;
@@ -118,12 +126,28 @@ const init_audio = () => {
 
     main = audioCtx.createGain();
     main.gain.value = 0;
+    viscousmain = audioCtx.createGain();
+    viscousmain.gain.value = 0;
+    stiffmain = audioCtx.createGain();
+    stiffmain.gain.value = 0;
+
+    viscousmain.connect(main);
+    stiffmain.connect(main);
     main.connect(audioCtx.destination);
 };
 
+function playViscous(buffers){
+  for(let i=0; i<buffers.length; i++){
+    let smp = audioCtx.createBufferSource();
+    smp.buffer = buffers[i][1];
+    smp.loop = true;
+    smp.connect(viscousmain);
+    smp.start();
+  }
+}
+
 function startGranular(){
   main.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
-  console.log("🎵 Granular démarré");
 }
 
 function stopGranular(){

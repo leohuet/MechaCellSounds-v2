@@ -13,6 +13,8 @@ sounds/
 *.aiff
 *.aif
 *.aifc
+*.mp3
+*.m4a
 
 
 ### Images ###

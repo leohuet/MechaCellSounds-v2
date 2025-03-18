@@ -74,7 +74,7 @@ socket.on("users", function(users_list, id, cells_names){
 // It hides the buttons and shows the canvas
 function choixUser(user_sel){
     translateMenu();
-    setupGranular();
+    setupAudio();
     user = user_sel;
     console.log('user' + user + ' choisi');
     user_launched = true;
@@ -134,7 +134,6 @@ var on_cell = function on_cell(cellornot){
 // Functions triggered when client touches the screen
 document.getElementById("sketch").addEventListener("touchstart", function(){
     showLegende(0);
-    console.log('mouse');
     // touch_cell = is_on_cell();
     if(user_launched && !settings_on){
         socket.send(`${user} touch 1`);
@@ -150,7 +149,6 @@ document.body.addEventListener("touchend", function(){
 
 document.getElementById("sketch").addEventListener("mousedown", function(){
     showLegende(0);
-    console.log('mouse');
     // touch_cell = is_on_cell();
     if(user_launched && !settings_on){
         socket.send(`${user} touch 1`);

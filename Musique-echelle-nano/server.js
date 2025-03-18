@@ -73,19 +73,19 @@ let stiffness = 0;
 let viscosity = 0;
 let elasticity = 0;
 let filtered_viscosity = 0;
-let old_viscosity = 0;
+let old_viscosity = 0.25;
+let old_int_stiff = 0;
 
 let envelop_changes = 0;
-let sf_changes = 0;
-
-let grain_length = 0;
-let grain_transpose = 0;
-let grain_frequency = 0;
 
 let old_x = 0;
 let last_point = [0.5, 0.5, 0];
 
 const toGranularValues = {
+    stiffness: 0,
+    viscosity: 0,
+    elasticity: 0,
+    soundFile: 10,
     frequency: 15,
     grainSize: 0.01,
     transpose: true,
@@ -325,13 +325,14 @@ function sort_values(x, y, s){
     viscosity = ((Math.sin((moyenne_array[2]*Math.PI)/2) * stiffness) / 0.35).toFixed(3);
     elasticity = (Math.cos((moyenne_array[2]*Math.PI)/2) * stiffness).toFixed(3);
 
-    console.log(stiffness, viscosity, elasticity);
-
-    io.emit('stiffness', viscosity);
 
 }
 
 function mapValues(){
+    if(parseInt(stiffness*10) != old_int_stiff){
+        old_int_stiff = parseInt(stiffness*10);
+        toGranularValues.soundFile = parseInt(stiffness*-11+11 + Math.random()*8);
+    } 
     if(stiffonoff){
         if(touch == 1){
             toGranularValues.frequency = (stiffness*3+2) + vitesse_moyenne*2;
@@ -356,11 +357,13 @@ function mapValues(){
         }
     }
     else toGranularValues.frequency = 5;
-    toGranularValues.grainSize = viscosity*10+10;
-    filtered_viscosity = (viscosity + old_viscosity)/2;
+    toGranularValues.grainSize = (viscosity*20+10) / 1000;
+    filtered_viscosity = (viscosity + old_viscosity) / 2;
+    toGranularValues.stiffness = stiffness;
+    toGranularValues.viscosity = viscosity;
+    toGranularValues.elasticity = elasticity;
     old_viscosity = viscosity;
     envelop_changes = Math.floor(viscosity*-3+5);
-    sf_changes = "TO DO";
     toGranularValues.transpose = stiffness >= 0.5 ? true : false;
     io.emit('granular-values', toGranularValues);
 }
@@ -423,7 +426,6 @@ io.on('connection',function(socket){
             // and the user number is set to unavailable
             users_dict['user_active'][event[0]-1] = 0;
             users_dict['ids'][event[0]-1] = event.substr(event.length-20, 20);
-            // Max.outlet(event[0] + ' link');
         }
         else if(event.includes('touch')){
             touch = event.substr(8, 10);
@@ -434,7 +436,6 @@ io.on('connection',function(socket){
 
     socket.on('coordonates', function(event){
         // When the client sends coordinates, it is directed to Max outlet
-        // Max.outlet(event);
         x = event[1];
         y = event[2];
         s = Math.ceil(((event[3]-15)/30)*4);
@@ -452,6 +453,5 @@ io.on('connection',function(socket){
         console.log(socket.id + ' disconnected');
         let index = users_dict['ids'].indexOf(socket.id);
         users_dict['user_active'][index] = 1;
-        // Max.outlet(index+1 + ' unlink');
     });
 });
