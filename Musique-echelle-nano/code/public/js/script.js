@@ -1,5 +1,5 @@
 var socket = io();
-socket.connect('http://127.0.0.1:8000');
+socket.connect('https://' + window.location.hostname + ':3000',  {secure: true});
 var user = 0;
 
 var settings_on = false;
@@ -74,7 +74,7 @@ socket.on("users", function(users_list, id, cells_names){
 // It hides the buttons and shows the canvas
 function choixUser(user_sel){
     translateMenu();
-    playAudio();
+    setupGranular();
     user = user_sel;
     console.log('user' + user + ' choisi');
     user_launched = true;
@@ -138,11 +138,13 @@ document.getElementById("sketch").addEventListener("touchstart", function(){
     // touch_cell = is_on_cell();
     if(user_launched && !settings_on){
         socket.send(`${user} touch 1`);
+        startGranular();
     }
 });
 document.body.addEventListener("touchend", function(){
     if(user_launched && !settings_on){
         socket.send(`${user} touch 0`);
+        stopGranular();
     }
 });
 
@@ -152,11 +154,13 @@ document.getElementById("sketch").addEventListener("mousedown", function(){
     // touch_cell = is_on_cell();
     if(user_launched && !settings_on){
         socket.send(`${user} touch 1`);
+        startGranular();
     }
 });
 document.body.addEventListener("mouseup", function(){
     if(user_launched && !settings_on){
         socket.send(`${user} touch 0`);
+        stopGranular();
     }
 });
 
@@ -326,7 +330,11 @@ function showLegende(onoff){
     
 }
 
-socket.on("stiffness", function(data){
-    console.log(data);
-    changeVolume(data);
+// socket.on("stiffness", function(data){
+//     console.log(data);
+//     changeVolume(data);
+// });
+
+socket.on("granular-values", function(data){
+    changeGranularValues(data);
 });
