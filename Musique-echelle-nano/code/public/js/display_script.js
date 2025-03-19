@@ -127,53 +127,6 @@ async function translateMenu(){
     // size.style.flexDirection = 'column';
 }
 
-var on_cell = function on_cell(cellornot){
-    touch_cell = cellornot;
-};
-
-// Functions triggered when client touches the screen
-document.getElementById("sketch").addEventListener("touchstart", function(){
-    showLegende(0);
-    // touch_cell = is_on_cell();
-    if(user_launched && !settings_on){
-        socket.send(`${user} touch 1`);
-        startGranular();
-    }
-});
-document.body.addEventListener("touchend", function(){
-    if(user_launched && !settings_on){
-        socket.send(`${user} touch 0`);
-        stopGranular();
-    }
-});
-
-document.getElementById("sketch").addEventListener("mousedown", function(){
-    showLegende(0);
-    // touch_cell = is_on_cell();
-    if(user_launched && !settings_on){
-        socket.send(`${user} touch 1`);
-        startGranular();
-    }
-});
-document.body.addEventListener("mouseup", function(){
-    if(user_launched && !settings_on){
-        socket.send(`${user} touch 0`);
-        stopGranular();
-    }
-});
-
-var old_x = 0;
-var old_y = 0;
-
-// Function to send the coordinates of the touch to the server
-function send_xy(x, y, size){
-    message = `${user} ${x} ${y} ${size}`;
-    socket.emit("coordonates", [user, x, y, size]);
-    sleep(200);
-    old_x = x;
-    old_y = y;
-}
-
 // Function to display the settings
 function showHideSettings(){
     const settings_content = document.getElementById('settings_content');
@@ -216,7 +169,6 @@ function showHideSettings(){
 function displayMenu(selection){
     // selection = 1 (viscosity), 2 (stiffness) or 3 (elasticity)
     let picturebutton = document.getElementById("pictureShowHide");
-    let check = picturebutton.children[0].children[0];
     cell = selection;
     if(menu.style.display == 'flex'){
         // if the menu is already displayed, hide it
@@ -327,12 +279,3 @@ function showLegende(onoff){
     }
     
 }
-
-// socket.on("stiffness", function(data){
-//     console.log(data);
-//     changeVolume(data);
-// });
-
-socket.on("granular-values", function(data){
-    changeGranularValues(data);
-});

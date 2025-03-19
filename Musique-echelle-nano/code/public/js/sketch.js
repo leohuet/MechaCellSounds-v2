@@ -1,8 +1,6 @@
 const windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-var socket = io();
-socket.connect('http://127.0.0.1:8000');
-socket.send(`${windowWidth} windowwidth`);
+
 var old_picture = 1;
 
 if(windowWidth > windowHeight){

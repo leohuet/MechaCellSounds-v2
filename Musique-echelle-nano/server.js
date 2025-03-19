@@ -8,8 +8,6 @@ const path    =     require('path');
 const os      =     require('os');
 var fs        =     require('fs');
 const csv     =     require('csv-parser');
-const { clear } = require("console");
-const { env } = require("process");
 
 var options = {
     key: fs.readFileSync(__dirname + '/code/public/key.pem'),
@@ -30,23 +28,11 @@ var users_dict = {
 
 var cells = []
 
-var files = fs.readdirSync(__dirname + '/data');
-for(i in files) {
-    if(files[i].split('.')[1] == 'xlsx'){
-        cells.push(files[i].split('.')[0]);
-    }
-}
-
-
 rows = ['Zc', 'E0Tn', 'betaTn'];
-let stiffonoff = true;
-let viscousonoff = true;
-let elasticonoff = true;
 
 temp_arrayf = new Array(3);
 moyenne_array = new Array(3);
 
-var selection = 0;
 var all_data = [];
 var map_size = 0;
 var csvDone = new Array(cells.length).fill(false);
@@ -63,33 +49,12 @@ let DD_dict = {
     'betaTn_2D_array': [],
 }
 
-let touch = 0;
-let dataforVitesse = [[0.5, 0.5, 0], [0.5, 0.5, 0]];
-let mean_v_list = [];
-let mean_length = 0;
-let vitesse_moyenne = 0;
-
-let stiffness = 0;
-let viscosity = 0;
-let elasticity = 0;
-let filtered_viscosity = 0;
-let old_viscosity = 0.25;
-let old_int_stiff = 0;
-
-let envelop_changes = 0;
-
-let old_x = 0;
-let last_point = [0.5, 0.5, 0];
-
-const toGranularValues = {
-    stiffness: 0,
-    viscosity: 0,
-    elasticity: 0,
-    soundFile: 10,
-    frequency: 15,
-    grainSize: 0.01,
-    transpose: true,
-};
+var files = fs.readdirSync(__dirname + '/data');
+for(i in files) {
+    if(files[i].split('.')[1] == 'xlsx'){
+        cells.push(files[i].split('.')[0]);
+    }
+}
 
 // ========== Pages ========== //
 // Allows acess to all files inside 'public' folder.
@@ -162,7 +127,7 @@ function filter_data(){
 
     console.log(the_emodulus_min, the_emodulus_max, the_beta_min, the_beta_max);
 
-    let temp_data = JSON.parse(JSON.stringify(all_data));
+    let temp_data = structuredClone(all_data);
 
     // remap data between min and max values
     for(var d=0; d<all_data.length; d++){
@@ -172,7 +137,7 @@ function filter_data(){
         }
     }
 
-    temp_data = JSON.parse(JSON.stringify(all_data));
+    temp_data = structuredClone(all_data);
 	
 	for(var j=0; j<all_data.length; j++){
 		// Rebuild the arrays in the dict to re order the data into 2D arrays
@@ -197,176 +162,10 @@ function filter_data(){
 		}
 
 		// Replace the array into all_data to the 2Darray
-		all_data[j] = JSON.parse(JSON.stringify(DD_dict));
+		all_data[j] = structuredClone(DD_dict);
 	}
 }
 
-function calculVitesse(onoff, point){
-    const mean_size = 10;
-    dataforVitesse[0] = point;
-    if(onoff == 1){
-        let d = Math.sqrt(Math.pow(dataforVitesse[1][0] - dataforVitesse[0][0], 2) + Math.pow(dataforVitesse[1][1] - dataforVitesse[0][1], 2));
-        dataforVitesse[1] = point;
-        if(mean_v_list.length == 500){
-            mean_v_list = mean_v_list.slice(1);
-            mean_v_list[499] = d;
-        }
-        else{
-            mean_v_list.push(d);
-            mean_length += 1;
-        }
-        if(mean_size > mean_length) fenetre = mean_length;
-        else fenetre = mean_size;
-
-        let sum = 0;
-        for(let i=1; i<=fenetre; i++){
-            sum += mean_v_list[mean_length - i];
-        }
-        vitesse_moyenne = (sum / fenetre)*10+1;
-        if(vitesse_moyenne > 5) vitesse_moyenne = 5;
-    }
-    else{
-        dataforVitesse[1] = [0.5, 0.5, 15];
-        vitesse_moyenne = 0;
-        mean_v_list = [];
-        mean_length = 0;
-    }
-}
-
-/*function calculVitesse(onoff){
-    const mean_size = 10;
-    if(onoff == 1){
-        setInterval(() => {
-            dataforVitesse[0] = last_point;
-            let d = Math.sqrt(Math.pow(dataforVitesse[1][0] - dataforVitesse[0][0], 2) + Math.pow(dataforVitesse[1][1] - dataforVitesse[0][1], 2));
-            dataforVitesse[1] = last_point;
-            if(mean_v_list.length == 500){
-                mean_v_list = mean_v_list.slice(1);
-                mean_v_list[499] = d;
-            }
-            else{
-                mean_v_list.push(d);
-                mean_length += 1;
-            }
-            if(mean_size > mean_length) fenetre = mean_length;
-            else fenetre = mean_size;
-
-            let sum = 0;
-            for(let i=1; i<=fenetre; i++){
-                sum += mean_v_list[mean_length - i];
-            }
-            vitesse_moyenne = (sum / fenetre / 10)*4+1;
-            if(vitesse_moyenne > 5) vitesse_moyenne = 5;
-        }
-        , 30);
-    }
-    else{
-        clearInterval();
-        dataforVitesse[1] = [0.5, 0.5, 15];
-        vitesse_moyenne = 0;
-        mean_v_list = [];
-        mean_length = 0;
-    }
-}*/
-
-function points_distance(x, y, s){
-	// Get all the points around the xy input within a chosen distance
-	var distances = [0, Math.sqrt(2), Math.sqrt(2), Math.sqrt(8), Math.sqrt(8)];
-	var center = 0;
-	var points = [];
-	if(s == 1 || s == 3){
-		center = 0.5;
-	}
-	for(var x1=0; x1<map_size; x1++){
-		for(var y1=0; y1<map_size; y1++){
-			var distance = Math.sqrt(Math.pow(x+center-x1, 2)+ Math.pow(y+center-y1, 2));
-			if(distance <= distances[s]){
-				points.push(x1);
-				points.push(y1);
-			}
-		}
-	}
-	return points;
-}
-
-function sort_values(x, y, s){
-	var addition = [0, 0, 0];
-    var new_x = Math.ceil(x*map_size);
-    var new_y = Math.ceil(y*-map_size+map_size);
-	// new_x = Math.ceil(((x+32)/64)*map_size);
-	// new_y = Math.ceil(((y+32)/64)*map_size);
-	var xys = points_distance(new_x, new_y, s);
-	// Retrieve the data at each point from xys array and add them in the addition array
-	for(var j=0; j<xys.length/2; j++){
-		for(var index=0; index < rows.length; index++){
-			selected_row = rows[index];
-			temp_arrayf[index] = all_data[selection][selected_row + '_2D_array'][xys[j*2]][xys[j*2+1]];
-			addition[index] = addition[index] + temp_arrayf[index];
-		}
-	}
-
-	// Measure each mean value for the 3 rows
-	for(var e=0; e<addition.length; e++){
-		moyenne = addition[e]/(xys.length/2);
-		moyenne_array[e] = moyenne;
-	}
-
-    moyenne_array[1] = (2*moyenne_array[1] - 1)*vitesse_moyenne;
-    if(moyenne_array[1] > 1) moyenne_array[1] = 1;
-    if(moyenne_array[1] < -1) moyenne_array[1] = -1;
-    moyenne_array[1] = (moyenne_array[1] + 1)/2;
-
-    moyenne_array[2] = (2*moyenne_array[2] - 1)*vitesse_moyenne;
-    if(moyenne_array[2] > 1) moyenne_array[2] = 1;
-    if(moyenne_array[2] < -1) moyenne_array[2] = -1;
-    moyenne_array[2] = (moyenne_array[2] + 1)/2;
-
-    stiffness = moyenne_array[1].toFixed(3);
-    viscosity = ((Math.sin((moyenne_array[2]*Math.PI)/2) * stiffness) / 0.35).toFixed(3);
-    elasticity = (Math.cos((moyenne_array[2]*Math.PI)/2) * stiffness).toFixed(3);
-
-
-}
-
-function mapValues(){
-    if(parseInt(stiffness*10) != old_int_stiff){
-        old_int_stiff = parseInt(stiffness*10);
-        toGranularValues.soundFile = parseInt(stiffness*-11+11 + Math.random()*8);
-    } 
-    if(stiffonoff){
-        if(touch == 1){
-            toGranularValues.frequency = (stiffness*3+2) + vitesse_moyenne*2;
-        }
-        else{
-            const startFrequency = toGranularValues.frequency;
-            const duration = viscosity*1000;
-            const steps = 100;
-            const increment = (0 - startFrequency) / steps;
-            const interval = duration / steps;
-
-            let currentStep = 0;
-
-            const intervalId = setInterval(() => {
-                if (currentStep < steps) {
-                    toGranularValues.frequency = startFrequency + increment * currentStep;
-                    currentStep++;
-                } else {
-                    clearInterval(intervalId);
-                }
-            }, interval);
-        }
-    }
-    else toGranularValues.frequency = 5;
-    toGranularValues.grainSize = (viscosity*20+10) / 1000;
-    filtered_viscosity = (viscosity + old_viscosity) / 2;
-    toGranularValues.stiffness = stiffness;
-    toGranularValues.viscosity = viscosity;
-    toGranularValues.elasticity = elasticity;
-    old_viscosity = viscosity;
-    envelop_changes = Math.floor(viscosity*-3+5);
-    toGranularValues.transpose = stiffness >= 0.5 ? true : false;
-    io.emit('granular-values', toGranularValues);
-}
 
 async function init(){
     for(var cell=0; cell<cells.length; cell++){
@@ -398,7 +197,7 @@ async function init(){
             }
     
             // Append the dictionnary to an array containing all the cells data
-            all_data.push(JSON.parse(JSON.stringify(D_dict)));
+            all_data.push(structuredClone(D_dict));
         }).catch((err) => console.error('Error reading CSV:', err));
     }
 }
@@ -416,6 +215,7 @@ io.on('connection',function(socket){
     console.log(socket.id + ' connected');
     users = socket.client.conn.server.clientsCount;
     console.log(users + " users connected" );
+    io.emit('data', all_data, map_size);
 
     // Send the users available to the client
     io.to(socket.id).emit('users', users_dict['user_active'], socket.id, cells);
@@ -426,25 +226,6 @@ io.on('connection',function(socket){
             // and the user number is set to unavailable
             users_dict['user_active'][event[0]-1] = 0;
             users_dict['ids'][event[0]-1] = event.substr(event.length-20, 20);
-        }
-        else if(event.includes('touch')){
-            touch = event.substr(8, 10);
-            console.log(touch);
-            // calculVitesse(touch);
-        }
-    });
-
-    socket.on('coordonates', function(event){
-        // When the client sends coordinates, it is directed to Max outlet
-        x = event[1];
-        y = event[2];
-        s = Math.ceil(((event[3]-15)/30)*4);
-        if(touch == 1 && x != old_x){
-            old_x = x;
-            last_point = [x, y, s];
-            calculVitesse(touch, last_point);
-            sort_values(x, y, s);
-            mapValues();
         }
     });
 
