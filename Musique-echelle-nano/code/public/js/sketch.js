@@ -62,16 +62,6 @@ var changePicture = function changePicture(orientation){
   }
 }
 
-function sizeCercle(force, pressure){
-  if(pressure){
-    size = force*500+30;
-  }
-  else{
-    nopressuresize += .5;
-    size = nopressuresize;
-  }
-}
-
 function sliderSize(value){
   if(size >= 15 && size <= 35 && value == 1){
     size = size+value*10;
@@ -79,17 +69,10 @@ function sliderSize(value){
   else if(size >= 25 && size <= 45 && value == -1){
     size = size+value*10;
   }
-  socket.send(`${user} size ${size}`);
-  console.log(`${user} size ${size}`);
-}
-
-function resetForce(){
-  size = 30
-  nopressuresize = 30;
 }
 
 var is_on_cell = function is_on_cell(){
-  if(mouseX<picwidth && mouseY<picheight){
+  if(mouseX >= 0 && mouseX<picwidth && mouseY >= 0 && mouseY<picheight){
     return true;
   }
   else{
@@ -100,14 +83,14 @@ var is_on_cell = function is_on_cell(){
 function draw() {
   background(255);
   stroke(0)
+  fill(200, 200, 200, 100);
   square(0, 0, picwidth);
   if(picture != 0){
     image(img, 0, 0, picwidth, picheight);
   }
-  if(user_launched){
+  if(user_launched && toAudioProcessValues.touch == 1 && is_on_cell()){
       send_xy(mouseX/picwidth, mouseY/picheight, size);
       translate(mouseX, mouseY);
-      fill(200, 200, 200, 100);
       stroke(0);
       strokeWeight(1);
       circle(0, 0, size);

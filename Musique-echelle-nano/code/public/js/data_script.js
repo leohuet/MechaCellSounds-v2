@@ -6,8 +6,6 @@ let elasticonoff = true;
 
 let all_data = [];
 let map_size = 64;
-var selection = 0;
-let touch = 0;
 
 temp_arrayf = new Array(3);
 moyenne_array = new Array(3);
@@ -30,6 +28,7 @@ let old_x = 0;
 let last_point = [0.5, 0.5, 0];
 
 const toAudioProcessValues = {
+    touch: 0,
     stiffness: 0,
     stiffnessOnOff: 1,
     viscosity: 0,
@@ -54,33 +53,28 @@ var on_cell = function on_cell(cellornot){
 // Functions triggered when client touches the screen
 document.getElementById("sketch").addEventListener("touchstart", function(){
     showLegende(0);
-    touch = 1;
+    toAudioProcessValues.touch = 1;
     if(user_launched && !settings_on){
-        // socket.send(`${user} touch 1`);
         startGranular();
     }
 });
 document.body.addEventListener("touchend", function(){
     if(user_launched && !settings_on){
-        touch = 0;
-        // socket.send(`${user} touch 0`);
+        toAudioProcessValues.touch = 0;
         stopGranular();
     }
 });
 
 document.getElementById("sketch").addEventListener("mousedown", function(){
     showLegende(0);
-    touch = 1;
-    // touch_cell = is_on_cell();
+    toAudioProcessValues.touch = 1;
     if(user_launched && !settings_on){
-        // socket.send(`${user} touch 1`);
         startGranular();
     }
 });
 document.body.addEventListener("mouseup", function(){
     if(user_launched && !settings_on){
-        touch = 0;
-        // socket.send(`${user} touch 0`);
+        toAudioProcessValues.touch = 0;
         stopGranular();
     }
 });
@@ -141,14 +135,12 @@ function sort_values(x, y, s){
 	var addition = [0, 0, 0];
     var new_x = Math.ceil(x*map_size);
     var new_y = Math.ceil(y*-map_size+map_size);
-	// new_x = Math.ceil(((x+32)/64)*map_size);
-	// new_y = Math.ceil(((y+32)/64)*map_size);
 	var xys = points_distance(new_x, new_y, s);
 	// Retrieve the data at each point from xys array and add them in the addition array
 	for(var j=0; j<xys.length/2; j++){
 		for(var index=0; index < rows.length; index++){
 			selected_row = rows[index];
-			temp_arrayf[index] = all_data[selection][selected_row + '_2D_array'][xys[j*2]][xys[j*2+1]];
+			temp_arrayf[index] = all_data[cell-1][selected_row + '_2D_array'][xys[j*2]][xys[j*2+1]];
 			addition[index] = addition[index] + temp_arrayf[index];
 		}
 	}
@@ -180,10 +172,18 @@ function mapValues(){
     if(parseInt(stiffness*10) != old_int_stiff){
         old_int_stiff = parseInt(stiffness*10);
         toAudioProcessValues.soundFile = parseInt(stiffness*-11+11 + Math.random()*8);
-    } 
+    }
     if(stiffonoff){
-        if(touch == 1){
+        if(toAudioProcessValues.touch == 1){
             toAudioProcessValues.frequency = (stiffness*3+2) + vitesse_moyenne*2;
+            toAudioProcessValues.grainSize = (viscosity*20+10) / 1000;
+            filtered_viscosity = (parseFloat(viscosity) + parseFloat(old_viscosity)) / 2;
+            toAudioProcessValues.stiffness = stiffness;
+            toAudioProcessValues.viscosity = filtered_viscosity;
+            toAudioProcessValues.elasticity = elasticity;
+            old_viscosity = viscosity;
+            envelop_changes = Math.floor(viscosity*-3+5);
+            toAudioProcessValues.transpose = stiffness >= 0.5 ? true : false;
         }
         else{
             const startFrequency = toAudioProcessValues.frequency;
@@ -205,15 +205,6 @@ function mapValues(){
         }
     }
     else toAudioProcessValues.frequency = 5;
-    toAudioProcessValues.grainSize = (viscosity*20+10) / 1000;
-    filtered_viscosity = (parseFloat(viscosity) + parseFloat(old_viscosity)) / 2;
-    toAudioProcessValues.stiffness = stiffness;
-    toAudioProcessValues.viscosity = filtered_viscosity;
-    toAudioProcessValues.elasticity = elasticity;
-    old_viscosity = viscosity;
-    envelop_changes = Math.floor(viscosity*-3+5);
-    toAudioProcessValues.transpose = stiffness >= 0.5 ? true : false;
-    // io.emit('granular-values', toAudioProcessValues);
     changeGranularValues(toAudioProcessValues);
 }
 
@@ -231,10 +222,10 @@ function send_xy(x, y, size){
     // message = `${user} ${x} ${y} ${size}`;
     // socket.emit("coordonates", [user, x, y, size]);
     let s = Math.ceil(((size-15)/30)*4);
-    if(touch == 1 && x != old_x){
+    if(toAudioProcessValues.touch == 1 && x != old_x){
         old_x = x;
         last_point = [x, y, s];
-        calculVitesse(touch, last_point);
+        calculVitesse(toAudioProcessValues.touch, last_point);
         sort_values(x, y, s);
         mapValues();
     }

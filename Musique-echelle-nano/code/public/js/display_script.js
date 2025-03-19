@@ -25,6 +25,7 @@ let cell = 1;
 let pictureonoff = false;
 let cell_select = false;
 
+let dataOnOffs = ["viscosityOnOff", "stiffnessOnOff", "elasticityOnOff"];
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -178,7 +179,7 @@ function displayMenu(selection){
             menu_titre.innerHTML = menu_choices[selection-1].innerText;
             picturebutton.style.display = "flex";
             drawPicture(cells[cell-1], type, pictureonoff);
-            socket.send(`${user} picture ${cell-1} ${type}`)
+            // socket.send(`${user} picture ${cell-1} ${type}`)
         }
     }
     else{
@@ -242,18 +243,14 @@ function activeSounds(checked, sound){
         // if type has changed, draw the new picture
         drawPicture(cells[cell-1], type, pictureonoff);
         if(type != 'none'){
-            socket.send(`${user} picture ${cells[cell-1]} ${type}`)
-            console.log(type);
             document.getElementById("legendeimg").src = `media/pics/${cells[cell-1]}_${type}_scale.png`;
         }
     }
     if(checked){
-        // send to Max to active the sound
-        socket.send(`${user} active ${sound}`);
+        toAudioProcessValues[dataOnOffs[sound]] = 1;
     }
     else{
-        // send to Max to disactive the sound
-        socket.send(`${user} disactive ${sound}`);
+        toAudioProcessValues[dataOnOffs[sound]] = 0;
     }
     old_type = type;
 }
