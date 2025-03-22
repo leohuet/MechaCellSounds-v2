@@ -4,7 +4,7 @@ let c,w,h;
 const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
 let triggerNode = null;
-let audioCtx, main, viscousmain, stiffmain, snd, duration, stutterGain;
+let audioCtx, main, granularmain, viscousmain, stiffmain, snd, duration, stutterGain;
 
 let granularBuffers = {};
 let viscousBuffers = {};
@@ -13,6 +13,8 @@ let elasticBuffers = {};
 let viscousMix = {};
 let currentBuffer = null;
 let mixedBufferSource;
+
+let fromAudioProcessValues = {};
 
 const viscousPans = [-1, 1, -0.9, 0.9, 0, -1, 1];
 
@@ -50,6 +52,7 @@ class TriggerNode extends AudioWorkletNode {
 }
 
 async function changeGranularValues(values) {
+  fromAudioProcessValues = values;
   if(values.touch == 1){
     soundFile = values.soundFile;
     changeBuffer(granularBuffers, soundFile);
@@ -169,7 +172,7 @@ const particle = (pos=0, pan=0, amp=1, dur=0.01, rate=1) => {
     smp.loop = false;
     smp.connect(vca);
     vca.connect(panner);
-    panner.connect(main);
+    panner.connect(granularmain);
     smp.start(now, pos);
     smp.stop(now + 5);
 };
@@ -177,14 +180,16 @@ const particle = (pos=0, pan=0, amp=1, dur=0.01, rate=1) => {
 const init_audio = () => {
     AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext({ latencyHint: 'balanced' });
-
     main = audioCtx.createGain();
-    main.gain.value = 0;
+    main.gain.value = 1;
+    granularmain = audioCtx.createGain();
+    granularmain.gain.value = 0;
     viscousmain = audioCtx.createGain();
     viscousmain.gain.value = 0;
     stiffmain = audioCtx.createGain();
     stiffmain.gain.value = 0;
 
+    granularmain.connect(main);
     viscousmain.connect(main);
     stiffmain.connect(main);
     main.connect(audioCtx.destination);
@@ -225,24 +230,20 @@ function playViscous(buffers){
 }
 
 function handleViscousLevels(values){
-  if(values.viscosityOnOff){
-    if(values.stiffnessOnOff){
-      viscousmain.gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
-      for(let i=0; i<viscousBuffers.length; i++){
-        viscousBuffers[i][2].gain.value = 1;
-      }
+  if(values.stiffnessOnOff){
+    for(let i=0; i<viscousBuffers.length; i++){
+      viscousBuffers[i][2].gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
     }
-    else{
-      mixedBufferSource.playbackRate.value = values.viscosity*3+0.2;
-      const stutterGainValue = values.viscosity*-1+1;
-      stutterGain.gain.linearRampToValueAtTime(stutterGainValue, audioCtx.currentTime + 0.1);
-      for(let i=0; i<viscousBuffers.length; i++){
-        viscousBuffers[i][2].gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
-      }
-      viscousmain.gain.value = 1;
+    stutterGain.gain.value = 0;
+  }
+  else{
+    mixedBufferSource.playbackRate.value = values.viscosity*3+0.2;
+    const stutterGainValue = values.viscosity*-1+1;
+    stutterGain.gain.linearRampToValueAtTime(stutterGainValue, audioCtx.currentTime + 0.1);
+    for(let i=0; i<viscousBuffers.length; i++){
+      viscousBuffers[i][2].gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
     }
   }
-  else viscousmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
 
   for(let i=0; i<viscousBuffers.length; i++){
     viscousBuffers[i][3].pan.linearRampToValueAtTime(viscousBuffers[i][3].pan.value + values.viscosity*rnd2(), audioCtx.currentTime + 0.1);
@@ -250,11 +251,15 @@ function handleViscousLevels(values){
 }
 
 function startGranular(){
-  main.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+  if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+  else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
+  // granularmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
 }
 
 function stopGranular(){
-  main.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+  if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+  else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
+  // granularmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
 }
 
 // document.getElementById("bufferSelector").addEventListener("change", (e) => {
