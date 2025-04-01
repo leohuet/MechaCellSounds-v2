@@ -5,6 +5,10 @@ const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
 let triggerNode = null;
 let audioCtx, main, granularmain, viscousmain, stiffmain, snd, duration, stutterGain;
+let softGran, softGran2, stiffGran, stiffGran2;
+let stiffGains = {};
+let mainStiffFilter, mainStiffEcho, mainStiffReverb;
+let dryGain, wetGain;
 
 let granularBuffers = {};
 let viscousBuffers = {};
@@ -17,6 +21,8 @@ let mixedBufferSource;
 let fromAudioProcessValues = {};
 
 const viscousPans = [-1, 1, -0.9, 0.9, 0, -1, 1];
+const stiffPans = [-1, 1, 0, -0.2, 0.2];
+let stiffPaners = {};
 
 
 function drunk(data, min, max, step){
@@ -26,6 +32,17 @@ function drunk(data, min, max, step){
   if (value > max) value = max;
   else if (value < min) value = min;
   return value;
+}
+
+async function createReverb() {
+  let convolver = audioCtx.createConvolver();
+
+  // load impulse response from file
+  let response = await fetch("./media/IR.wav");
+  let arraybuffer = await response.arrayBuffer();
+  convolver.buffer = await audioCtx.decodeAudioData(arraybuffer);
+
+  return convolver;
 }
 
 class TriggerNode extends AudioWorkletNode {
@@ -43,7 +60,7 @@ class TriggerNode extends AudioWorkletNode {
     if (pos < 0) pos = duration;
     particle(
       Math.abs(pos),
-      rnd2()*1,
+      rnd2()*0.1,
       0.1,
       grainSize,
       pitch,
@@ -64,8 +81,7 @@ async function changeGranularValues(values) {
         triggerNode.port.postMessage(freq);
     }
     handleViscousLevels(values);
-    if(values.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(values.stiffness, audioCtx.currentTime + 0.1);
-    else stiffmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+    handleStiffLevels(values);
   }
   else if(values.touch == 0){
     const startFrequency = toAudioProcessValues.frequency;
@@ -152,6 +168,7 @@ async function setupAudio(){
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
+    playStiff();
     await audioCtx.audioWorklet.addModule('./code/public/js/trigger.js');
     triggerNode = new TriggerNode(audioCtx);
 }
@@ -183,13 +200,13 @@ const init_audio = () => {
     main = audioCtx.createGain();
     main.gain.value = 1;
     granularmain = audioCtx.createGain();
-    granularmain.gain.value = 0;
+    granularmain.gain.value = 1;
     viscousmain = audioCtx.createGain();
     viscousmain.gain.value = 0;
     stiffmain = audioCtx.createGain();
     stiffmain.gain.value = 0;
 
-    granularmain.connect(main);
+    // granularmain.connect(main);
     viscousmain.connect(main);
     stiffmain.connect(main);
     main.connect(audioCtx.destination);
@@ -229,6 +246,81 @@ function playViscous(buffers){
   }
 }
 
+async function playStiff(){
+  mainStiffFilter = audioCtx.createBiquadFilter();
+  mainStiffFilter.type = "lowpass";
+  mainStiffFilter.frequency.value = 20000;
+
+  mainStiffEcho = audioCtx.createDelay();
+  mainStiffEcho.delayTime.value = 0.1;
+  const feedback = audioCtx.createGain();
+  feedback.gain.value = 0.8;
+  mainStiffEcho.connect(feedback);
+  feedback.connect(mainStiffEcho);
+
+  mainStiffReverb = await createReverb();
+
+  dryGain = audioCtx.createGain();
+  wetGain = audioCtx.createGain();
+  dryGain.gain.value = 1;
+  wetGain.gain.value = 0;
+
+  for(let i=0; i<5; i++){
+    stiffGains[i] = audioCtx.createGain();
+    stiffGains[i].gain.value = 0;
+    stiffPaners[i] = audioCtx.createStereoPanner();
+    stiffPaners[i].pan.value = stiffPans[i];
+    stiffGains[i].connect(stiffPaners[i]);
+    stiffPaners[i].connect(mainStiffEcho);
+    stiffPaners[i].connect(dryGain);
+  }
+
+  mainStiffEcho.connect(mainStiffReverb);
+  mainStiffReverb.connect(wetGain);
+  wetGain.connect(mainStiffFilter);
+  dryGain.connect(mainStiffFilter);
+  mainStiffFilter.connect(stiffmain);
+
+  const bufferSize = 2 * audioCtx.sampleRate;
+  const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const output = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1; // Valeurs entre -1 et 1 (bruit blanc)
+  }
+  const noiseSource = audioCtx.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+  noiseSource.start();
+
+  softGran = audioCtx.createBiquadFilter();
+  softGran.type = "bandpass";
+  softGran.frequency.value = 800;
+  softGran.Q.value = 30;
+  softGran.gain.value = 5;
+  granularmain.connect(softGran);
+  softGran.connect(stiffGains[0]);
+
+  const gainNode1 = audioCtx.createGain();
+  gainNode1.gain.value = 0.5;
+  noiseSource.connect(gainNode1.gain);
+  softGran2 = audioCtx.createBiquadFilter();
+  softGran2.type = "bandpass";
+  softGran2.frequency.value = 800;
+  softGran2.Q.value = 30;
+  softGran2.gain.value = 5;
+  granularmain.connect(softGran2);
+  softGran2.connect(gainNode1);
+  gainNode1.connect(stiffGains[1]);
+
+  const gainNode = audioCtx.createGain();
+  gainNode.gain.value = 0.5;
+  noiseSource.connect(gainNode.gain);
+  granularmain.connect(gainNode);
+  gainNode.connect(stiffGains[2]);
+
+  granularmain.connect(stiffGains[4]);
+}
+
 function handleViscousLevels(values){
   if(values.stiffnessOnOff){
     for(let i=0; i<viscousBuffers.length; i++){
@@ -250,16 +342,32 @@ function handleViscousLevels(values){
   }
 }
 
+function handleStiffLevels(values){
+  softGran.frequency.value = drunk(softGran.frequency.value, 600, 900, 50);
+  stiffGains[0].gain.linearRampToValueAtTime((1-values.stiffness)*10, audioCtx.currentTime + 0.1);
+  stiffGains[1].gain.linearRampToValueAtTime((1-values.stiffness)*10, audioCtx.currentTime + 0.1);
+  let stiffLevel = (values.stiffness-0.3 < 0 ? 0 : values.stiffness-0.3).toFixed(3);
+  stiffGains[2].gain.linearRampToValueAtTime(stiffLevel*1.5, audioCtx.currentTime + 0.1);
+  stiffGains[4].gain.linearRampToValueAtTime(values.stiffness, audioCtx.currentTime + 0.1);
+  mainStiffFilter.frequency.linearRampToValueAtTime((values.stiffness-0.25)*20000, audioCtx.currentTime + 0.1);
+  wetGain.gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.01);
+  dryGain.gain.linearRampToValueAtTime(1-values.viscosity, audioCtx.currentTime + 0.01);
+}
+
 function startGranular(){
   if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
   else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
   // granularmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+  if(fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(fromAudioProcessValues.stiffness, audioCtx.currentTime + 0.1);
+  else if(!fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.value = 0;
 }
 
 function stopGranular(){
   if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
   else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
   // granularmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+  if(fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+  else if(!fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.value = 0;
 }
 
 // document.getElementById("bufferSelector").addEventListener("change", (e) => {

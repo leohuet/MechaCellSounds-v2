@@ -17,7 +17,7 @@ class TriggerProcess extends AudioWorkletProcessor {
 
         this.port.onmessage = (event) => {
             this._frequency = event.data;
-            console.log(`[TriggerProcess:onmessage] frequency: ${this._frequency}`);
+            // console.log(`[TriggerProcess:onmessage] frequency: ${this._frequency}`);
         };
     }
 
