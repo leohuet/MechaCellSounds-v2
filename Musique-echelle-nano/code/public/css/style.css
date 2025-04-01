@@ -69,7 +69,7 @@ canvas {
      position: static;
      flex-shrink: 1;
      height: 50px;
-     width: 50px;
+     width: 200px;
      border: 2px solid black;
      border-radius: 10px;
      background-color: #666;
