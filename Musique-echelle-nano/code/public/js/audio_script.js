@@ -1,29 +1,39 @@
+// AUDIO VARIABLES
+let triggerNode = null;
+let audioCtx, viscousStiffMain, main;
+let currentBuffer = null;
+let fromAudioProcessValues = {};
+
+// GRANULAR VARIABLES
 let head=0, pos=0, freq=15, old_freq = 1, grainSize = 0.01, pitch = 1, soundFile = 17;
 let transpose = true;
-let c,w,h;
-const rnd2 = () => Math.random() * 2 - 1;
-const choose = (array) => array[Math.floor(Math.random()*array.length)]
-let triggerNode = null;
-let audioCtx, main, granularmain, viscousmain, stiffmain, viscousStiffMain, snd, duration, stutterGain;
+let granularmain, duration;
+let granularBuffers = {};
+
+// VISCOUS VARIABLES
+let viscousmain, stiffmain, stutterGain;
+let viscousBuffers = {};
+let viscousMix = {};
+let mixedBufferSource;
+const viscousPans = [-1, 1, -0.9, 0.9, 0, -1, 1];
+
+// STIFF VARIABLES
 let softGran, softGran2, stiffGran, stiffGran2;
 let stiffGains = {};
 let mainFilter, mainStiffFilter, mainStiffEcho, mainStiffReverb;
 let dryGain, wetGain;
-
-let granularBuffers = {};
-let viscousBuffers = {};
-let stiffBuffers = {};
-let elasticBuffers = {};
-let viscousMix = {};
-let currentBuffer = null;
-let mixedBufferSource;
-
-let fromAudioProcessValues = {};
-
-const viscousPans = [-1, 1, -0.9, 0.9, 0, -1, 1];
 const stiffPans = [-1, 1, 0, -0.2, 0.2];
 let stiffPaners = {};
 
+// ELASTIC VARIABLES
+let elasticmain;
+let elasticBuffers = {};
+let elasticChoice = 0;
+let elasticGranularGain;
+let elasticPans = [0, 0, 0, 0, 0, 0, 0, 0];
+
+const rnd2 = () => Math.random() * 2 - 1;
+const choose = (array) => array[Math.floor(Math.random()*array.length)]
 
 function drunk(data, min, max, step){
   if (Math.random() > 0.5) value = data + step;
@@ -166,9 +176,11 @@ async function setupAudio(){
     viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.wav", "viscous_comp_2.wav", "viscous_comp_3_1.wav", "viscous_comp_3_2.wav", "viscous_comp_4.wav", "viscous_GMU_1.wav", 
       "viscous_GMU_2.wav"
     ]);
+    elasticBuffers = await loadMultipleBuffers(["Bubbles5.wav", "impact_visqueux.wav", "SpringMic1.wav", "SpringMic2.wav", "SpringMic3.wav", "SpringMic4.wav", "tree_rim.wav"]);
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
+    playElastic(elasticBuffers);
     playStiff();
     await audioCtx.audioWorklet.addModule('./code/public/js/trigger.js');
     triggerNode = new TriggerNode(audioCtx);
@@ -255,6 +267,27 @@ function playViscous(buffers){
     smp.connect(buffers[i][2]);
     smp.start();
   }
+}
+
+async function playElastic(buffers){
+  for(let i=0; i<elasticBuffers.length; i++){
+    let gain = audioCtx.createGain();
+    let panner = audioCtx.createStereoPanner();
+    panner.pan.value = elasticPans[i];
+    gain.gain.value = 0;
+    elasticBuffers[i].push(gain);
+    elasticBuffers[i].push(panner);
+    elasticBuffers[i][2].connect(elasticBuffers[i][3]);
+    elasticBuffers[i][3].connect(elasticmain);
+  }
+  for(let i=0; i<buffers.length; i++){
+    let smp = audioCtx.createBufferSource();
+    smp.buffer = buffers[i][1];
+    smp.loop = false;
+    smp.connect(buffers[i][2]);
+  }
+
+  granularmain.connect(elasticGranularGain);
 }
 
 async function playStiff(){
@@ -353,6 +386,19 @@ function handleViscousLevels(values){
   }
 }
 
+function handleElasticLevels(values){
+  if(values.stiffness > 0.8 && values.viscosity < 0.1){
+    elasticChoice = 1;
+    
+  }
+  else if(values.stiffness > 0.6 && values.viscosity < 0.2) elasticChoice = 2;
+  else if(values.stiffness < 0.5 && values.viscosity < 0.3) elasticChoice = 3;
+  else if(values.stiffness < 0.4 && values.viscosity < 0.4) elasticChoice = 4;
+  else elasticChoice = 0;
+
+  
+}
+
 function handleStiffLevels(values){
   softGran.frequency.value = drunk(softGran.frequency.value, 600, 900, 50);
   stiffGains[0].gain.linearRampToValueAtTime((1-values.stiffness)*10, audioCtx.currentTime + 0.1);
@@ -389,6 +435,8 @@ async function stopGranular(){
     curve[i] = curve[i] < 0.05 ? 0.0 : curve[i];
   }
   viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 2);
+
+  mainFilter.frequency.linearRampToValueAtTime(fromAudioProcessValues.viscosity*-18000+20000, audioCtx.currentTime + 0.1);
 
 }
 
