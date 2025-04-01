@@ -230,3 +230,9 @@ function send_xy(x, y, size){
         mapValues();
     }
 }
+
+async function getAudioProcessValues(){
+    return new Promise((resolve) => {
+        resolve(toAudioProcessValues);
+    });
+}

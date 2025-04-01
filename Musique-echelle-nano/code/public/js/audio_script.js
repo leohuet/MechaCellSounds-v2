@@ -4,10 +4,10 @@ let c,w,h;
 const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
 let triggerNode = null;
-let audioCtx, main, granularmain, viscousmain, stiffmain, snd, duration, stutterGain;
+let audioCtx, main, granularmain, viscousmain, stiffmain, viscousStiffMain, snd, duration, stutterGain;
 let softGran, softGran2, stiffGran, stiffGran2;
 let stiffGains = {};
-let mainStiffFilter, mainStiffEcho, mainStiffReverb;
+let mainFilter, mainStiffFilter, mainStiffEcho, mainStiffReverb;
 let dryGain, wetGain;
 
 let granularBuffers = {};
@@ -70,6 +70,7 @@ class TriggerNode extends AudioWorkletNode {
 
 async function changeGranularValues(values) {
   fromAudioProcessValues = values;
+  // console.log(fromAudioProcessValues);
   if(values.touch == 1){
     soundFile = values.soundFile;
     changeBuffer(granularBuffers, soundFile);
@@ -202,13 +203,23 @@ const init_audio = () => {
     granularmain = audioCtx.createGain();
     granularmain.gain.value = 1;
     viscousmain = audioCtx.createGain();
-    viscousmain.gain.value = 0;
+    viscousmain.gain.value = 1;
     stiffmain = audioCtx.createGain();
-    stiffmain.gain.value = 0;
+    stiffmain.gain.value = 1;
+    viscousStiffMain = audioCtx.createGain();
+    viscousStiffMain.gain.value = 0;
+
+    mainFilter = audioCtx.createBiquadFilter();
+    mainFilter.type = "lowpass";
+    mainFilter.frequency.value = 20000;
+    mainFilter.Q.value = 1;
+    mainFilter.gain.value = 0;
 
     // granularmain.connect(main);
-    viscousmain.connect(main);
-    stiffmain.connect(main);
+    viscousmain.connect(viscousStiffMain);
+    stiffmain.connect(viscousStiffMain);
+    viscousStiffMain.connect(mainFilter);
+    mainFilter.connect(main);
     main.connect(audioCtx.destination);
 };
 
@@ -354,20 +365,31 @@ function handleStiffLevels(values){
   dryGain.gain.linearRampToValueAtTime(1-values.viscosity, audioCtx.currentTime + 0.01);
 }
 
-function startGranular(){
-  if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
-  else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
-  // granularmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
-  if(fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(fromAudioProcessValues.stiffness, audioCtx.currentTime + 0.1);
-  else if(!fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.value = 0;
+async function startGranular(){
+  viscousStiffMain.gain.cancelScheduledValues(audioCtx.currentTime);
+  const sampleRate = 100;
+  const curve = new Float32Array(sampleRate);
+  mainFilter.frequency.value = 20000;
+  fromAudioProcessValues = await getAudioProcessValues();
+  for (let i = 0; i < sampleRate; i++) {
+    let x = (i / (sampleRate - 1.0)).toFixed(3);
+    curve[i] = Math.pow(x, fromAudioProcessValues.viscosity);
+  }
+  viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 1);
 }
 
-function stopGranular(){
-  if(fromAudioProcessValues.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
-  else if(!fromAudioProcessValues.viscosityOnOff) viscousmain.gain.value = 0;
-  // granularmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
-  if(fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
-  else if(!fromAudioProcessValues.stiffnessOnOff) stiffmain.gain.value = 0;
+async function stopGranular(){
+  viscousStiffMain.gain.cancelScheduledValues(audioCtx.currentTime);
+  const sampleRate = 100;
+  const curve = new Float32Array(sampleRate);
+  for (let i = 0; i < sampleRate; i++) {
+    let x = i / (sampleRate*0.1 - 1);
+    curve[i] = Math.pow(Math.E, -x * (1-(fromAudioProcessValues.viscosity*1.7-1)));
+    curve[i] = curve[i] > 1.0 ? 1.0 : curve[i];
+    curve[i] = curve[i] < 0.05 ? 0.0 : curve[i];
+  }
+  viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 2);
+
 }
 
 // document.getElementById("bufferSelector").addEventListener("change", (e) => {
