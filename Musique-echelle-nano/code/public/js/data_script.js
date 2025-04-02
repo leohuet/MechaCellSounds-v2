@@ -54,7 +54,7 @@ var on_cell = function on_cell(cellornot){
 document.getElementById("sketch").addEventListener("touchstart", function(){
     showLegende(0);
     toAudioProcessValues.touch = 1;
-    if(user_launched && !settings_on){
+    if(user_launched && !settings_on && is_on_cell()){
         startGranular();
     }
 });
@@ -68,7 +68,7 @@ document.body.addEventListener("touchend", function(){
 document.getElementById("sketch").addEventListener("mousedown", function(){
     showLegende(0);
     toAudioProcessValues.touch = 1;
-    if(user_launched && !settings_on){
+    if(user_launched && !settings_on && is_on_cell()){
         startGranular();
     }
 });

@@ -31,6 +31,7 @@ let elasticBuffers = {};
 let elasticChoice = 0;
 let elasticGranularGain;
 let elasticPans = [0, 0, 0, 0, 0, 0, 0, 0];
+let delayNode;
 
 const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
@@ -176,7 +177,7 @@ async function setupAudio(){
     viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.wav", "viscous_comp_2.wav", "viscous_comp_3_1.wav", "viscous_comp_3_2.wav", "viscous_comp_4.wav", "viscous_GMU_1.wav", 
       "viscous_GMU_2.wav"
     ]);
-    elasticBuffers = await loadMultipleBuffers(["Bubbles5.wav", "impact_visqueux.wav", "SpringMic1.wav", "SpringMic2.wav", "SpringMic3.wav", "SpringMic4.wav", "tree_rim.wav"]);
+    elasticBuffers = await loadMultipleBuffers(["Bubbles5.wav", "impact_visqueux.wav", "tree_rim.wav", "SpringMic1.wav", "SpringMic2.wav", "SpringMic3.wav", "SpringMic4.wav"]);
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
@@ -219,7 +220,7 @@ const init_audio = () => {
     stiffmain = audioCtx.createGain();
     stiffmain.gain.value = 1;
     elasticmain = audioCtx.createGain();
-    elasticmain.gain.value = 1;
+    elasticmain.gain.value = 0;
     viscousStiffMain = audioCtx.createGain();
     viscousStiffMain.gain.value = 0;
 
@@ -229,12 +230,20 @@ const init_audio = () => {
     mainFilter.Q.value = 1;
     mainFilter.gain.value = 0;
 
+    delayNode = audioCtx.createDelay();
+    delayNode.delayTime.value = 0.1;
+    const feedback = audioCtx.createGain();
+    feedback.gain.value = 0.3;
+    delayNode.connect(feedback);
+    feedback.connect(delayNode);
+
     // granularmain.connect(main);
     viscousmain.connect(viscousStiffMain);
     stiffmain.connect(viscousStiffMain);
     viscousStiffMain.connect(mainFilter);
     mainFilter.connect(main);
-    elasticmain.connect(main);
+    elasticmain.connect(delayNode);
+    delayNode.connect(main);
     main.connect(audioCtx.destination);
 };
 
@@ -389,48 +398,21 @@ function handleViscousLevels(values){
 }
 
 function handleElasticLevels(values){
-  if(values.stiffness > 0.8 && values.viscosity < 0.1){
-    elasticChoice = 1;
-    console.log("Elastic 1");
-    elasticGranularGain.gain.value = 1;
-    elasticGranularGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
-  }
-  else if(values.stiffness > 0.6 && values.viscosity < 0.2){
-    elasticChoice = 2;
-    console.log("Elastic 2");
-    elasticGranularGain.gain.value = 0;
-    let smp1 = audioCtx.createBufferSource();
-    smp1.buffer = elasticBuffers[6][1];
-    smp1.loop = false;
-    smp1.connect(elasticBuffers[6][2]);
-    smp1.start();
-  }
-  else if(values.stiffness < 0.5 && values.viscosity < 0.3){
-    elasticChoice = 3;
-    elasticGranularGain.gain.value = 0;
-    let randomLaunch = Math.floor(Math.random() * 3 + 2);
-    let smp2 = audioCtx.createBufferSource();
-    smp2.buffer = elasticBuffers[randomLaunch][1];
-    smp2.loop = false;
-    smp2.connect(elasticBuffers[6][2]);
+  elasticGranularGain.gain.value = 0;
+  let randomLaunch = Math.floor(values.stiffness*5+rnd2()*2);
+  if(randomLaunch < 0) randomLaunch = 0;
+  if(randomLaunch > 6) randomLaunch = 6;
+  let smp2 = audioCtx.createBufferSource();
+  smp2.buffer = elasticBuffers[randomLaunch][1];
+  smp2.loop = false;
+  smp2.connect(elasticBuffers[randomLaunch][2]);
+  if(randomLaunch >= 3 && Math.random() > 0.5){
     smp2.start();
   }
-  else if(values.stiffness < 0.4 && values.viscosity < 0.4){
-    elasticChoice = 4;
-    elasticGranularGain.gain.value = 0;
-    let smp3 = audioCtx.createBufferSource();
-    smp3.buffer = elasticBuffers[0][1];
-    smp3.loop = false;
-    smp3.connect(elasticBuffers[6][2]);
-    smp3.start();
-    let smp4 = audioCtx.createBufferSource();
-    smp4.buffer = elasticBuffers[1][1];
-    smp4.loop = false;
-    smp4.connect(elasticBuffers[6][2]);
-    smp4.start();
+  else if(randomLaunch < 3){
+    smp2.start();
   }
-  else elasticChoice = 0;
-  elasticmain.gain.linearRampToValueAtTime(values.elasticity, audioCtx.currentTime + 0.1);
+  elasticmain.gain.linearRampToValueAtTime(values.elasticity*0.1, audioCtx.currentTime + 0.1);
 }
 
 function handleStiffLevels(values){
