@@ -218,6 +218,8 @@ const init_audio = () => {
     viscousmain.gain.value = 1;
     stiffmain = audioCtx.createGain();
     stiffmain.gain.value = 1;
+    elasticmain = audioCtx.createGain();
+    elasticmain.gain.value = 1;
     viscousStiffMain = audioCtx.createGain();
     viscousStiffMain.gain.value = 0;
 
@@ -232,6 +234,7 @@ const init_audio = () => {
     stiffmain.connect(viscousStiffMain);
     viscousStiffMain.connect(mainFilter);
     mainFilter.connect(main);
+    elasticmain.connect(main);
     main.connect(audioCtx.destination);
 };
 
@@ -274,20 +277,17 @@ async function playElastic(buffers){
     let gain = audioCtx.createGain();
     let panner = audioCtx.createStereoPanner();
     panner.pan.value = elasticPans[i];
-    gain.gain.value = 0;
+    gain.gain.value = 1;
     elasticBuffers[i].push(gain);
     elasticBuffers[i].push(panner);
     elasticBuffers[i][2].connect(elasticBuffers[i][3]);
     elasticBuffers[i][3].connect(elasticmain);
   }
-  for(let i=0; i<buffers.length; i++){
-    let smp = audioCtx.createBufferSource();
-    smp.buffer = buffers[i][1];
-    smp.loop = false;
-    smp.connect(buffers[i][2]);
-  }
-
+  console.log(elasticBuffers);
+  elasticGranularGain = audioCtx.createGain();
+  elasticGranularGain.gain.value = 0;
   granularmain.connect(elasticGranularGain);
+  elasticGranularGain.connect(elasticmain);
 }
 
 async function playStiff(){
@@ -366,6 +366,8 @@ async function playStiff(){
 }
 
 function handleViscousLevels(values){
+  if(values.viscosityOnOff) viscousmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+  else viscousmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
   if(values.stiffnessOnOff){
     for(let i=0; i<viscousBuffers.length; i++){
       viscousBuffers[i][2].gain.linearRampToValueAtTime(values.viscosity, audioCtx.currentTime + 0.1);
@@ -389,17 +391,51 @@ function handleViscousLevels(values){
 function handleElasticLevels(values){
   if(values.stiffness > 0.8 && values.viscosity < 0.1){
     elasticChoice = 1;
-    
+    console.log("Elastic 1");
+    elasticGranularGain.gain.value = 1;
+    elasticGranularGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
   }
-  else if(values.stiffness > 0.6 && values.viscosity < 0.2) elasticChoice = 2;
-  else if(values.stiffness < 0.5 && values.viscosity < 0.3) elasticChoice = 3;
-  else if(values.stiffness < 0.4 && values.viscosity < 0.4) elasticChoice = 4;
+  else if(values.stiffness > 0.6 && values.viscosity < 0.2){
+    elasticChoice = 2;
+    console.log("Elastic 2");
+    elasticGranularGain.gain.value = 0;
+    let smp1 = audioCtx.createBufferSource();
+    smp1.buffer = elasticBuffers[6][1];
+    smp1.loop = false;
+    smp1.connect(elasticBuffers[6][2]);
+    smp1.start();
+  }
+  else if(values.stiffness < 0.5 && values.viscosity < 0.3){
+    elasticChoice = 3;
+    elasticGranularGain.gain.value = 0;
+    let randomLaunch = Math.floor(Math.random() * 3 + 2);
+    let smp2 = audioCtx.createBufferSource();
+    smp2.buffer = elasticBuffers[randomLaunch][1];
+    smp2.loop = false;
+    smp2.connect(elasticBuffers[6][2]);
+    smp2.start();
+  }
+  else if(values.stiffness < 0.4 && values.viscosity < 0.4){
+    elasticChoice = 4;
+    elasticGranularGain.gain.value = 0;
+    let smp3 = audioCtx.createBufferSource();
+    smp3.buffer = elasticBuffers[0][1];
+    smp3.loop = false;
+    smp3.connect(elasticBuffers[6][2]);
+    smp3.start();
+    let smp4 = audioCtx.createBufferSource();
+    smp4.buffer = elasticBuffers[1][1];
+    smp4.loop = false;
+    smp4.connect(elasticBuffers[6][2]);
+    smp4.start();
+  }
   else elasticChoice = 0;
-
-  
+  elasticmain.gain.linearRampToValueAtTime(values.elasticity, audioCtx.currentTime + 0.1);
 }
 
 function handleStiffLevels(values){
+  if(values.stiffnessOnOff) stiffmain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.1);
+  else stiffmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
   softGran.frequency.value = drunk(softGran.frequency.value, 600, 900, 50);
   stiffGains[0].gain.linearRampToValueAtTime((1-values.stiffness)*10, audioCtx.currentTime + 0.1);
   stiffGains[1].gain.linearRampToValueAtTime((1-values.stiffness)*10, audioCtx.currentTime + 0.1);
@@ -425,6 +461,7 @@ async function startGranular(){
 }
 
 async function stopGranular(){
+  handleElasticLevels(fromAudioProcessValues);
   viscousStiffMain.gain.cancelScheduledValues(audioCtx.currentTime);
   const sampleRate = 100;
   const curve = new Float32Array(sampleRate);
