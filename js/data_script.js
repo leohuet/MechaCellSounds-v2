@@ -4,9 +4,6 @@ let stiffonoff = true;
 let viscousonoff = true;
 let elasticonoff = true;
 
-let all_data = [];
-let map_size = 64;
-
 temp_arrayf = new Array(3);
 moyenne_array = new Array(3);
 
@@ -40,11 +37,6 @@ const toAudioProcessValues = {
     grainSize: 0.01,
     transpose: true,
 };
-
-socket.on("data", function(data, mapsize){
-    all_data = data;
-    map_size = mapsize;
-});
 
 var on_cell = function on_cell(cellornot){
     touch_cell = cellornot;
@@ -208,19 +200,8 @@ function mapValues(){
     changeGranularValues(toAudioProcessValues);
 }
 
-// socket.on("stiffness", function(data){
-//     console.log(data);
-//     changeVolume(data);
-// });
-
-// socket.on("granular-values", function(data){
-//     changeGranularValues(data);
-// });
-
-
 function send_xy(x, y, size){
     // message = `${user} ${x} ${y} ${size}`;
-    // socket.emit("coordonates", [user, x, y, size]);
     let s = Math.ceil(((size-15)/30)*4);
     if(toAudioProcessValues.touch == 1 && x != old_x){
         old_x = x;

@@ -156,4 +156,5 @@ async function init(){
 init().then(() => {
     console.log('All CSVs read');
     filter_data();
+	init_display(cells);
 });

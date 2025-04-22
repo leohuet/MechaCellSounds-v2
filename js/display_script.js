@@ -14,7 +14,6 @@ let menu_choices;
 const sketch = document.getElementById("sketch");
 
 var user_launched = false;
-let cells = [];
 var touch_cell = false;
 let portrait = window.matchMedia("(orientation: portrait)");
 let orientationTel = 'portrait';
@@ -31,8 +30,7 @@ function sleep(ms) {
 }
 
 
-// Socket message sent from server when a client connects
-// It shows the buttons for the users that are not currently used
+// display the menu when the page is loaded
 function init_display(cells_names){
     choix_user.style.flexDirection = "column";
     choix_user.style.justifyContent = "center";
@@ -43,8 +41,7 @@ function init_display(cells_names){
     button.id = `user${1}`;
     button.style.display = 'block';
     choix_user.appendChild(button);
-    
-    cells = cells_names;
+
     sketch.style.height = window.innerWidth;
     legendetxt.style.top = `${window.innerWidth+30}px`;
     if(!user_launched){
@@ -57,7 +54,7 @@ function init_display(cells_names){
         }
         menu_choices = menu.children;
     }
-});
+}
 
 // Function triggered when client clicks to chose a user
 // It sends a message to the server to tell which user is chosen

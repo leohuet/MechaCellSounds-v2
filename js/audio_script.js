@@ -33,6 +33,8 @@ let elasticGranularGain;
 let elasticPans = [0, 0, 0, 0, 0, 0, 0, 0];
 let delayNode;
 
+let audio_url = "https://raw.githubusercontent.com/leohuet/MechaCellSounds-v2/main/media";
+
 const rnd2 = () => Math.random() * 2 - 1;
 const choose = (array) => array[Math.floor(Math.random()*array.length)]
 
@@ -119,7 +121,7 @@ async function changeGranularValues(values) {
 async function loadMultipleBuffers(fileList) {
   let buffers = {};
   for (const fileName of fileList) {
-      buffers[fileName] = await loadBuffer('./media/' + fileName);
+      buffers[fileName] = await loadBuffer(`${audio_url}/${fileName}`);
   }
   buffers = Object.entries(buffers);
   console.log("✅ Buffers chargés :", buffers);
@@ -183,7 +185,7 @@ async function setupAudio(){
     playViscous(viscousBuffers);
     playElastic(elasticBuffers);
     playStiff();
-    await audioCtx.audioWorklet.addModule('./code/public/js/trigger.js');
+    await audioCtx.audioWorklet.addModule('js/trigger.js');
     triggerNode = new TriggerNode(audioCtx);
 }
 
