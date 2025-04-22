@@ -1,4 +1,5 @@
 var rows = ['Zc', 'E0Tn', 'betaTn'];
+var cells = ["macrophage1", "macrophage2", "monocyte1", "monocyte2"]
 
 var temp_arrayf = new Array(3);
 var moyenne_array = new Array(3);
@@ -18,8 +19,6 @@ let DD_dict = {
     'E0Tn_2D_array': [],
     'betaTn_2D_array': [],
 }
-
-var cells = ["macrophage1", "macrophage2", "monocyte1", "monocyte2"]
 
 let fetch_url = "https://raw.githubusercontent.com/leohuet/MechaCellSounds-v2/main/data";
 
