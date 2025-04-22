@@ -128,8 +128,8 @@ function filter_data(){
 async function init(){
     for(var cell=0; cell<cells.length; cell++){
         // Read the csv file from the path in argument
-        const filePath = `${fetch_url}/${cell}.csv`;
-        const data = await readCSV(filePath, cell);
+        const filePath = `${fetch_url}/${cells[cell]}.csv`;
+        const data = await readCSV(filePath);
         map_size = Math.ceil(Math.sqrt(data.length));
 
         for(var index=0; index < rows.length; index++){
