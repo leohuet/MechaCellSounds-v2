@@ -2,8 +2,8 @@ var cells = []
 
 var rows = ['Zc', 'E0Tn', 'betaTn'];
 
-temp_arrayf = new Array(3);
-moyenne_array = new Array(3);
+var temp_arrayf = new Array(3);
+var moyenne_array = new Array(3);
 
 var all_data = [];
 var map_size = 0;
@@ -21,7 +21,7 @@ let DD_dict = {
     'betaTn_2D_array': [],
 }
 
-cells = ["macrophage1", "macrophage2", "monocyte1", "monocyte2"]
+var cells = ["macrophage1", "macrophage2", "monocyte1", "monocyte2"]
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
