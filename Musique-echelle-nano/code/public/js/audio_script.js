@@ -177,7 +177,7 @@ async function setupAudio(){
     viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.wav", "viscous_comp_2.wav", "viscous_comp_3_1.wav", "viscous_comp_3_2.wav", "viscous_comp_4.wav", "viscous_GMU_1.wav", 
       "viscous_GMU_2.wav"
     ]);
-    elasticBuffers = await loadMultipleBuffers(["Bubbles5.wav", "impact_visqueux.wav", "tree_rim.wav", "SpringMic1.wav", "SpringMic2.wav", "SpringMic3.wav", "SpringMic4.wav"]);
+    elasticBuffers = await loadMultipleBuffers(["Bubbles5.mp3", "impact_visqueux.mp3", "tree_rim.wav", "SpringMic1.mp3", "SpringMic2.mp3", "SpringMic3.mp3", "SpringMic4.mp3"]);
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
