@@ -1,5 +1,3 @@
-var cells = []
-
 var rows = ['Zc', 'E0Tn', 'betaTn'];
 
 var temp_arrayf = new Array(3);
@@ -22,6 +20,8 @@ let DD_dict = {
 }
 
 var cells = ["macrophage1", "macrophage2", "monocyte1", "monocyte2"]
+
+let fetch_url = "https://raw.githubusercontent.com/leohuet/MechaCellSounds-v2/main/data";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -129,7 +129,7 @@ function filter_data(){
 async function init(){
     for(var cell=0; cell<cells.length; cell++){
         // Read the csv file from the path in argument
-        const filePath = `./data/${cell}.csv`;
+        const filePath = `${fetch_url}/${cell}.csv`;
         const data = await readCSV(filePath, cell);
         map_size = Math.ceil(Math.sqrt(data.length));
 
