@@ -1,6 +1,6 @@
 var cells = []
 
-rows = ['Zc', 'E0Tn', 'betaTn'];
+var rows = ['Zc', 'E0Tn', 'betaTn'];
 
 temp_arrayf = new Array(3);
 moyenne_array = new Array(3);
