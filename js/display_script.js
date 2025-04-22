@@ -1,5 +1,5 @@
-var socket = io();
-socket.connect('https://' + window.location.hostname + ':3000',  {secure: true});
+// var socket = io();
+// socket.connect('https://' + window.location.hostname + ':3000',  {secure: true});
 var user = 0;
 
 var settings_on = false;
@@ -14,7 +14,6 @@ let menu_choices;
 const sketch = document.getElementById("sketch");
 
 var user_launched = false;
-let socketid;
 let cells = [];
 var touch_cell = false;
 let portrait = window.matchMedia("(orientation: portrait)");
@@ -34,7 +33,7 @@ function sleep(ms) {
 
 // Socket message sent from server when a client connects
 // It shows the buttons for the users that are not currently used
-socket.on("users", function(users_list, id, cells_names){
+function init_display(cells_names){
     choix_user.style.flexDirection = "column";
     choix_user.style.justifyContent = "center";
     choix_user.style.alignItems = "center";
@@ -50,7 +49,6 @@ socket.on("users", function(users_list, id, cells_names){
     legendetxt.style.top = `${window.innerWidth+30}px`;
     if(!user_launched){
         console.log('init');
-        socketid = id;
         choix_user.style.display = 'flex';
         menu_titre.innerHTML = cells[0];
         for(let i=0; i<cells.length; i++){
