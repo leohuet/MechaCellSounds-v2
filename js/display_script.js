@@ -25,6 +25,9 @@ let cell_select = false;
 
 let dataOnOffs = ["viscosityOnOff", "stiffnessOnOff", "elasticityOnOff"];
 
+let dotsAnim;
+let dots = "";
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -62,6 +65,24 @@ function init_display(cells_names){
 function choixUser(user_sel){
     translateMenu();
     setupAudio();
+    let loading = document.createElement('div');
+    loading.id = 'loading';
+    loading.innerHTML = "Loading...";
+    dotsAnim = setInterval(() => {
+        dots = (dots + 1) % 4;
+        loading.innerHTML = "Loading" + ".".repeat(dots);
+    }, 500);
+    loading.style.position = 'absolute';
+    loading.style.top = '50%';
+    loading.style.left = '50%';
+    loading.style.transform = 'translate(-50%, -50%)';
+    loading.style.fontSize = '2em';
+    loading.style.color = 'black';
+    loading.style.zIndex = '1000';
+    loading.style.display = 'flex';
+    loading.style.justifyContent = 'center';
+    loading.style.alignItems = 'center';
+    sketch.appendChild(loading);
     user = user_sel;
     user_launched = true;
     sectionbottom.style.display = 'flex';
@@ -110,6 +131,14 @@ async function translateMenu(){
     titre_menu.innerHTML = 'Changez de cellule';
     size.style.display = 'block';
     // size.style.flexDirection = 'column';
+}
+
+function notLoading(){
+    const loading = document.getElementById('loading');
+    if(loading){
+        sketch.removeChild(loading);
+    }
+    clearInterval(dotsAnim);
 }
 
 // Function to display the settings

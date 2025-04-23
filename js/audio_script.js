@@ -186,6 +186,8 @@ async function setupAudio(){
     playElastic(elasticBuffers);
     playStiff();
     await audioCtx.audioWorklet.addModule('js/trigger.js');
+    console.log("✅ AudioWorklet chargé");
+    notLoading();
     triggerNode = new TriggerNode(audioCtx);
 }
 
