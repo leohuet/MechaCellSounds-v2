@@ -1,3 +1,5 @@
+const { from } = require("form-data");
+
 // AUDIO VARIABLES
 let triggerNode = null;
 let audioCtx, viscousStiffMain, main;
@@ -183,7 +185,7 @@ async function setupAudio(){
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
-    playElastic(elasticBuffers);
+    playElastic();
     playStiff();
     await audioCtx.audioWorklet.addModule('js/trigger.js');
     console.log("✅ AudioWorklet chargé");
@@ -285,7 +287,7 @@ function playViscous(buffers){
   }
 }
 
-async function playElastic(buffers){
+async function playElastic(){
   for(let i=0; i<elasticBuffers.length; i++){
     let gain = audioCtx.createGain();
     let panner = audioCtx.createStereoPanner();
@@ -416,7 +418,7 @@ function handleElasticLevels(values){
   else if(randomLaunch < 3){
     smp2.start();
   }
-  elasticmain.gain.linearRampToValueAtTime(values.elasticity*0.1, audioCtx.currentTime + 0.1);
+  elasticmain.gain.linearRampToValueAtTime((values.elasticity*0.1-0.3)*1.4, audioCtx.currentTime + 0.1);
 }
 
 function handleStiffLevels(values){
@@ -435,6 +437,7 @@ function handleStiffLevels(values){
 
 async function startGranular(){
   viscousStiffMain.gain.cancelScheduledValues(audioCtx.currentTime);
+  elasticmain.gain.cancelScheduledValues(audioCtx.currentTime);
   const sampleRate = 100;
   const curve = new Float32Array(sampleRate);
   mainFilter.frequency.value = 20000;
@@ -458,12 +461,6 @@ async function stopGranular(){
     curve[i] = curve[i] < 0.05 ? 0.0 : curve[i];
   }
   viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 2);
-
   mainFilter.frequency.linearRampToValueAtTime(fromAudioProcessValues.viscosity*-18000+20000, audioCtx.currentTime + 0.1);
-
+  elasticmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fromAudioProcessValues.viscosity*-0.5+1.5);
 }
-
-// document.getElementById("bufferSelector").addEventListener("change", (e) => {
-//   changeBuffer(e.target.value);
-//   duration = parseInt(currentBuffer.duration);
-// });
