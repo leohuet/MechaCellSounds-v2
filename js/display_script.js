@@ -73,11 +73,14 @@ function choixUser(user_sel){
         loading.innerHTML = "Loading" + ".".repeat(dots);
     }, 500);
     loading.style.position = 'absolute';
-    loading.style.top = '50%';
-    loading.style.left = '50%';
-    loading.style.transform = 'translate(-50%, -50%)';
+    loading.style.top = '0';
+    loading.style.right = '0';
+    loading.style.bottom = '0';
+    loading.style.left = '0';
+    // loading.style.transform = 'translate(-50%, -50%)';
     loading.style.fontSize = '2em';
     loading.style.color = 'black';
+    loading.style.backgroundColor = "white";
     loading.style.zIndex = '1000';
     loading.style.display = 'flex';
     loading.style.justifyContent = 'center';
@@ -130,7 +133,6 @@ async function translateMenu(){
     picturebutton.style.display = 'flex';
     titre_menu.innerHTML = 'Changez de cellule';
     size.style.display = 'block';
-    // size.style.flexDirection = 'column';
 }
 
 function notLoading(){
