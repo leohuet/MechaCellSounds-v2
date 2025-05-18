@@ -73,7 +73,6 @@ function sliderSize(value){
 
 var is_on_cell = function is_on_cell(){
   if(mouseX >= 0 && mouseX<picwidth && mouseY >= 0 && mouseY<picheight){
-    console.log(`mouseX: ${mouseX} mouseY: ${mouseY}`);
     return true;
   }
   else{
