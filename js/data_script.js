@@ -213,6 +213,7 @@ document.getElementById("sketch").addEventListener("touchstart", function(){
     showLegende(0);
     toAudioProcessValues.touch = 1;
     if(user_launched && !settings_on && is_on_cell()){
+        console.log("touchstart");
         granularOn = true;
         startGranular();
     }
