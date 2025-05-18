@@ -2,11 +2,8 @@
 // socket.connect('https://' + window.location.hostname + ':3000',  {secure: true});
 var user = 0;
 
-var settings_on = false;
-const settings = document.getElementById('settings');
 const sectionbottom = document.getElementById('section_bottom');
 let choix_user = document.getElementById('choix_user');
-const users_buttons = choix_user.children;
 
 const menu_titre = document.getElementById('titre_menu');
 const menu = document.getElementById('sous');
@@ -14,14 +11,11 @@ let menu_choices;
 const sketch = document.getElementById("sketch");
 
 var user_launched = false;
-var touch_cell = false;
 let portrait = window.matchMedia("(orientation: portrait)");
-let orientationTel = 'portrait';
 let old_type = 'betaTn';
 let type = 'Zc';
 let cell = 1;
 let pictureonoff = false;
-let cell_select = false;
 
 let dataOnOffs = ["viscosityOnOff", "stiffnessOnOff", "elasticityOnOff"];
 
@@ -141,43 +135,6 @@ function notLoading(){
         sketch.removeChild(loading);
     }
     clearInterval(dotsAnim);
-}
-
-// Function to display the settings
-function showHideSettings(){
-    const settings_content = document.getElementById('settings_content');
-    const settings = document.getElementById('settings');
-    const button = document.getElementById('settings_button');
-    if(!settings_on){
-        // settings_content.style.display = 'block';
-        settings_content.style.width = '100%';
-        settings_content.style.transform = 'translateX(0%)';
-        settings_content.style.opacity = '1';
-        settings_content.style.transition = 'transform 0.5s, opacity 0.5s';
-        settings.style.left = '0';
-        settings.style.width = 'auto';
-        settings.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
-        settings.style.transition = 'background-color 0.5s';
-        button.style.transform = 'rotate(90deg)';
-        button.style.transition = 'transform 0.5s';
-        settings_on = true;
-        user_launched = false;
-    }
-    else if(settings_on){
-        // settings_content.style.display = 'none';
-        settings_content.style.width = 'auto';
-        settings_content.style.transform = 'translateX(100%)';
-        settings_content.style.opacity = '0';
-        settings_content.style.transition = 'transform 0.5s, opacity 0.5s';
-        settings.style.width = '100px';
-        settings.style.left = 'auto';
-        settings.style.backgroundColor = 'rgba(255, 255, 255, 0)';
-        settings.style.transition = 'background-color 0.5s';
-        button.style.transform = 'rotate(0deg)';
-        button.style.transition = 'transform 0.5s';
-        settings_on = false;
-        user_launched = true;
-    }
 }
 
 // Function triggered when you select a cell
