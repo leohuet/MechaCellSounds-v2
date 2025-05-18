@@ -55,7 +55,7 @@ var drawPicture = function drawPicture(pic, type, onoff){
 var changePicture = function changePicture(orientation){
   if(orientation == 'portrait' && user_launched){
     picwidth = windowWidth;
-    socket.send(`${picwidth} picwidth`);
+    console.log(`${picwidth} picwidth`);
     picheight = windowWidth;
     img.resize(picwidth, picheight);
     resizeCanvas(picwidth, picheight);
@@ -73,6 +73,7 @@ function sliderSize(value){
 
 var is_on_cell = function is_on_cell(){
   if(mouseX >= 0 && mouseX<picwidth && mouseY >= 0 && mouseY<picheight){
+    console.log(`mouseX: ${mouseX} mouseY: ${mouseY}`);
     return true;
   }
   else{
