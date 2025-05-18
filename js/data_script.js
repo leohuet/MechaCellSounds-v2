@@ -213,21 +213,34 @@ document.getElementById("sketch").addEventListener("touchstart", function(){
     showLegende(0);
     toAudioProcessValues.touch = 1;
     if(user_launched && !settings_on && is_on_cell()){
-        console.log("touchstart");
-        console.log(granularOn);
         granularOn = true;
         startGranular();
     }
 });
 document.body.addEventListener("touchend", function(){
     if(user_launched && !settings_on && granularOn){
-        console.log("touchend");
-        console.log(granularOn);
         granularOn = false;
         toAudioProcessValues.touch = 0;
         stopGranular();
     }
 });
+
+document.getElementById("sketch").addEventListener("mousedown", function(){
+    showLegende(0);
+    toAudioProcessValues.touch = 1;
+    if(user_launched && !settings_on && is_on_cell()){
+        granularOn = true;
+        startGranular();
+    }
+});
+document.body.addEventListener("mouseup", function(){
+    if(user_launched && !settings_on && granularOn){
+        granularOn = false;
+        toAudioProcessValues.touch = 0;
+        stopGranular();
+    }
+});
+
 
 
 
