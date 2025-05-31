@@ -29,7 +29,6 @@ canvas {
      position: absolute;
      top: 0;
      bottom: 0;
-     padding: 5px 20px;
      background-color: white;
      z-index: 10;
 }
@@ -49,8 +48,8 @@ canvas {
      flex-direction: row;
      align-items: center;
      margin-bottom: 20px;
-     padding: 0 50px;
-     justify-content: space-around;
+     padding: 0 20px;
+     justify-content: space-between;
 }
 
 #choix_user {
@@ -80,14 +79,23 @@ canvas {
 @media(max-width: 600px) {
      #menu_debut {
           margin: 0 0;
+          padding: 5px 20px;
      }
 
      .logoimg {
-          height: 40px;
+          height: 30px;
+     }
+
+     .logoimg2 {
+          height: 20px;
+     }
+
+     #menucell_div {
+          margin: -20px 0;
      }
 
      #choix_user {
-          margin: 10 10;
+          margin: -10 10;
      }
 
      #pictureShowHide h6 {
@@ -100,10 +108,15 @@ canvas {
 
 @media (min-width: 600px) {
      #menu_debut {
-          margin: 100 100;
+          margin: 0 0;
+          padding: 2Opx 50px;
      }
 
      .logoimg {
+          height: 80px;
+     }
+
+     .logoimg2 {
           height: 80px;
      }
 
