@@ -109,15 +109,15 @@ canvas {
 @media (min-width: 600px) {
      #menu_debut {
           margin: 0 0;
-          padding: 2Opx 50px;
+          padding: 2Opx;
      }
 
      .logoimg {
-          height: 80px;
+          height: 60px;
      }
 
      .logoimg2 {
-          height: 80px;
+          height: 50px;
      }
 
      #menucell_div {
