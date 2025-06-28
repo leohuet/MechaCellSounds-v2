@@ -1,3 +1,5 @@
+const { from } = require("form-data");
+
 // AUDIO VARIABLES
 let triggerNode = null;
 let audioCtx, viscousStiffMain, main;
@@ -460,5 +462,5 @@ async function stopGranular(){
   }
   viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 2);
   mainFilter.frequency.linearRampToValueAtTime(fromAudioProcessValues.viscosity*-18000+20000, audioCtx.currentTime + 0.1);
-  elasticmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fromAudioProcessValues.viscosity*-0.5+1.5);
+  if(fromAudioProcessValues.elasticityOnOff) elasticmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fromAudioProcessValues.viscosity*-0.5+1.5);
 }
