@@ -416,7 +416,7 @@ function handleElasticLevels(values){
   else if(randomLaunch < 3){
     smp2.start();
   }
-  elasticmain.gain.linearRampToValueAtTime((values.elasticity*0.1-0.3)*1.4, audioCtx.currentTime + 0.1);
+  if(fromAudioProcessValues.elasticityOnOff == 1) elasticmain.gain.linearRampToValueAtTime((values.elasticity*0.1-0.3)*1.4, audioCtx.currentTime + 0.1);
 }
 
 function handleStiffLevels(values){
@@ -460,5 +460,6 @@ async function stopGranular(){
   }
   viscousStiffMain.gain.setValueCurveAtTime(curve, audioCtx.currentTime, 2);
   mainFilter.frequency.linearRampToValueAtTime(fromAudioProcessValues.viscosity*-18000+20000, audioCtx.currentTime + 0.1);
-  if(fromAudioProcessValues.elasticityOnOff) elasticmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fromAudioProcessValues.viscosity*-0.5+1.5);
+  if(fromAudioProcessValues.elasticityOnOff == 1) elasticmain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fromAudioProcessValues.viscosity*-0.5+1.5);
+  else elasticmain.gain.value = 0;
 }
