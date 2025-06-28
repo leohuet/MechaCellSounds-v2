@@ -176,10 +176,10 @@ async function setupAudio(){
       "granulatormix_visqueux1.mp3", "amb.mp3", "granulatormix_visqueux3.mp3", "granulatormix_visqueux2.mp3"
     ]);
     changeBuffer(granularBuffers, 17);
-    viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.wav", "viscous_comp_2.wav", "viscous_comp_3_1.wav", "viscous_comp_3_2.wav", "viscous_comp_4.wav", "viscous_GMU_1.wav", 
-      "viscous_GMU_2.wav"
+    viscousBuffers = await loadMultipleBuffers(["viscous_comp_1.mp3", "viscous_comp_2.mp3", "viscous_comp_3_1.mp3", "viscous_comp_3_2.mp3", "viscous_comp_4.mp3", "viscous_GMU_1.mp3", 
+      "viscous_GMU_2.mp3"
     ]);
-    elasticBuffers = await loadMultipleBuffers(["Bubbles5.mp3", "impact_visqueux.mp3", "tree_rim.wav", "SpringMic1.mp3", "SpringMic2.mp3", "SpringMic3.mp3", "SpringMic4.mp3"]);
+    elasticBuffers = await loadMultipleBuffers(["Bubbles5.mp3", "impact_visqueux.mp3", "tree_rim.mp3", "SpringMic1.mp3", "SpringMic2.mp3", "SpringMic3.mp3", "SpringMic4.mp3"]);
     viscousMix = mixAudioBuffers(viscousBuffers);
     addViscousGains();
     playViscous(viscousBuffers);
