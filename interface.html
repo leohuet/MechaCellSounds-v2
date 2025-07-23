@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Mécasique</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="js/p5.js"></script>
+    <link href="css/interface.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="menu_debut">
+      <h2 style="text-align: center;">Mécasique</h2>
+      <p style="text-align: justify;">Cette interface vous permet de découvrir les propriétés mécaniques des cellules, comme le fait un microscope à force atomique!
+        <br>
+        Pour cela, appuyer sur "Commencer", attendez que la page se charge et choisissez une cellule à écouter (en haut à gauche).
+        Vous pourrez ensuite explorer la surface de l'échantillon avec votre doigt pour écouter la réponse mécanique des cellules.
+        <br>
+        <br>
+        Attention, bien désactiver le silencieux de votre téléphone pour entendre les sons !
+        <br>
+      </p>
+      <div id="menucell_div">
+        <div id="menu_cell">
+          <ul>
+            <li class="deroulant">
+              <a id="titre_menu" href="#" onclick="displayMenu(0)">macrophage1</a>
+              <ul id="sous">
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="choix_user">
+
+      </div>
+      <div style="display: none;">
+        <img style="width: 20px; padding-right: 5px;" onclick="sliderSize(1)" src="media/pics/website/plus.jpeg" alt="">
+        <img style="width: 20px" onclick="sliderSize(-1)" src="media/pics/website/minus.png" alt="">
+      </div>
+      <div id="pictureShowHide" class="sound_toggles">
+        <label id="imageswitch" class="switch">
+          <input type="checkbox" oninput="showHidePicture(this.checked)">
+          <span class="toggle"></span>
+        </label>
+        <h6>afficher l'image</h6>
+      </div>
+      <div id="logos">
+        <img class="logoimg" src="media/pics/website/logo_Inserm.png"></img>
+        <img class="logoimg2" src="media/pics/website/Aix-Marseille_Université_Logo_2024.png"></img>
+        <img class="logoimg2" src="media/pics/website/logo_DyNaMo.png"></img>
+        <img class="logoimg" src="media/pics/website/gmem.png"></img>
+      </div>
+      
+    </div>
+
+    <div id="sketch">
+      <script src="js/sketch.js"></script>
+      <a id="legende" onclick="showLegende(1)">Légende</a>
+      <img id="legendeimg" src="media/pics/macrophage1_Zc_scale.png"></img>
+      <a id="legendetxt">Topographie</a>
+    </div>
+
+    <div id="section_bottom">
+      <div class="sound_toggles2">
+        <label class="switch">
+          <input id="viscousToggle" type="checkbox" oninput="activeSounds(this.checked, this.value)" value="0" checked>
+          <span class="toggle"></span>
+        </label>
+        <h6 style="margin-block-start: 0; margin-block-end: 0;">viscosité</h6>
+      </div>
+      <div class="sound_toggles2">
+        <label class="switch">
+          <input id="stiffToggle" type="checkbox" oninput="activeSounds(this.checked, this.value)" value="1" checked>
+          <span class="toggle"></span>
+        </label>
+        <h6 style="margin-block-start: 0; margin-block-end: 0;">rigidité</h6>
+      </div>
+      <div class="sound_toggles2">
+        <label class="switch">
+          <input id="elasticToggle" type="checkbox" oninput="activeSounds(this.checked, this.value)" value="2" checked>
+          <span class="toggle"></span>
+        </label>
+        <h6 style="margin-block-start: 0; margin-block-end: 0;">elasticité</h6>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="js/display_script.js"></script>
+    <script type="text/javascript" src="js/data_script.js"></script>
+    <script type="text/javascript" src="js/audio_script.js"></script>
+
+  </body>
+
+</html>
