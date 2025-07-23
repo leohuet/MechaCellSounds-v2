@@ -1,5 +1,17 @@
 let count = [1, 1, 1, 1, 1, 1, 1];
 
+var url = window.location.href;
+let link;
+if (url.indexOf('/en') > -1){
+    link = '../index.html';
+}
+else{
+    link = './en/index.html';
+}
+const en = document.getElementById('en');
+en.setAttribute('href', link);
+
+
 setInterval(()=>{
     nextSlide(1);
 },5000);
