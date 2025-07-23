@@ -19,14 +19,11 @@ a {
     transition: opacity .2s;
     display: block;
     cursor: pointer;
+    border-bottom: 2px solid transparent;
 }
 
 a:hover {
-    color:rgb(106, 106, 150);
-}
-
-a:active {
-    color: aqua;
+    border-bottom: 2px solid gold;
 }
 
 li {
@@ -87,11 +84,13 @@ li {
 
 #burger_wrap {
     align-self: baseline;
+    transform: translateY(10px);
 }
 
 #nav_wrap {
     width: 100%;
     padding-left: 40%;
+    height: 35px;
 }
 
 #nav_titles {
@@ -146,7 +145,7 @@ li {
     overflow: hidden;
     position: relative;
     height: 100vh;
-    top: -60px;
+    top: -61px;
 }
 
 #main-slider {
