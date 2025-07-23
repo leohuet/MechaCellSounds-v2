@@ -66,3 +66,23 @@ function toSlide(slider_index, index){
         images[i].style.transition = "transform 1s ease-in-out";
     }
 }
+
+const menu = document.getElementById('sous');
+let menu_choices = menu.children;
+const menu_titre = document.getElementById('titre_menu');
+
+function displayMenu(selection){
+    if(menu.style.display == 'flex'){
+        // if the menu is already displayed, hide it
+        menu.style.display = 'none';
+        if(selection != 0){
+            menu_titre.innerHTML = menu_choices[selection-1].innerText;
+        }
+    }
+    else{
+        menu.style.display = 'flex';
+        for(let i=0; i<menu_choices.length; i++){
+            menu_choices[i].style.width = '100%';
+        }
+    }
+}
