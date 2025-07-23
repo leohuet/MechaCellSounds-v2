@@ -5,9 +5,13 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Futura', sans-serif;
+    font-family: 'Futura Std', sans-serif;
     background-color: white;
     color: black;
+}
+
+p{
+    font-weight: lighter;
 }
 
 a {
@@ -15,25 +19,39 @@ a {
     transition: opacity .2s;
     display: block;
     cursor: pointer;
-    color: black;
 }
 
 a:hover {
-    color:blue;
+    color:rgb(106, 106, 150);
 }
 
 a:active {
     color: aqua;
 }
 
+li {
+    padding: 5 0;
+}
+
 #nav_container {
-    padding: 0 10vw;
-    padding-top: 20px;
-    padding-bottom: 0px;
+    padding: 10px 10vw;
     position: sticky;
     top: 0;
     display: block;
     z-index: 100;
+    animation: nav-scroll auto linear;
+    animation-timeline: scroll();
+    animation-range: 0vh 100vh;
+    background-color: aliceblue;
+}
+
+@keyframes nav-scroll {
+    from {
+        background-color: transparent;
+    }
+    to {
+        background-color: aliceblue;
+    }
 }
 
 #nav_items {
@@ -73,6 +91,19 @@ a:active {
     white-space: nowrap;
     background-color: transparent;
     padding: 0 20;
+    animation: title-scroll auto linear;
+    animation-timeline: scroll();
+    animation-range: 0vh 100vh;
+    color: black;
+}
+
+@keyframes title-scroll {
+    from {
+        color: white;
+    }
+    to {
+        color: black;
+    }
 }
 
 #langue {
@@ -82,7 +113,6 @@ a:active {
 
 #langue:hover {
     text-decoration: none;
-    color: black;
 }
 
 .section {
@@ -90,15 +120,29 @@ a:active {
 }
 
 #sectiontion {
-    margin-top: 20px;
     overflow: hidden;
-    
+    position: relative;
+    height: 100vh;
+    top: -60px;
+}
+
+#main-slider {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #leprojet {
+    position: relative;
     padding-top: 50px;
 }
 
+#infos {
+    padding-top: 50px;
+}
 
 #logos {
     display: flex;

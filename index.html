@@ -14,7 +14,7 @@
 <body>
   <div id="nav_container">
     <div id="nav_items">
-      <a class="nav_title" href="#nav_container" style="font-size: 30px;">
+      <a class="nav_title" href="#nav_container" style="font-size: 30px; padding: 0 0;">
         Mécasique
       </a>
       <div id="nav_wrap">
@@ -29,22 +29,24 @@
   </div>
 
   <div id="sectiontion">
-    <div class="slider" id="slider-1">
-      <div class="slider-carousel">
-        <div class="images" id="slide-1"></div>
-        <div class="images" id="slide-2"></div>
-        <div class="images" id="slide-3"></div>
-      </div>
-      <div style="display: none;" class="left_arrow" onclick="previousSlide(1)">
-        <img src="./media/pics/website/fleche-gauche.png" style="width: 50px; height: 50px;">
-      </div>
-      <div style="display: none;" class="right_arrow" onclick="nextSlide(1)">
-        <img src="./media/pics/website/fleche-droit.png" style="width: 50px; height: 50px;">
-      </div>
-      <div class="slider_nav" id="slider_nav-1">
-        <button onclick="toSlide(1, 0)"></button>
-        <button onclick="toSlide(1, 1)"></button>
-        <button onclick="toSlide(1, 2)"></button>
+    <div id="main-slider">
+      <div class="slider" id="slider-1">
+        <div class="slider-carousel">
+          <div class="images" id="slide-1"></div>
+          <div class="images" id="slide-2"></div>
+          <div class="images" id="slide-3"></div>
+        </div>
+        <div style="display: none;" class="left_arrow" onclick="previousSlide(1)">
+          <img src="./media/pics/website/fleche-gauche.png" style="width: 50px; height: 50px;">
+        </div>
+        <div style="display: none;" class="right_arrow" onclick="nextSlide(1)">
+          <img src="./media/pics/website/fleche-droit.png" style="width: 50px; height: 50px;">
+        </div>
+        <div class="slider_nav" id="slider_nav-1">
+          <button onclick="toSlide(1, 0)"></button>
+          <button onclick="toSlide(1, 1)"></button>
+          <button onclick="toSlide(1, 2)"></button>
+        </div>
       </div>
     </div>
   </div>
@@ -73,7 +75,7 @@
     </p>
   </div>
 
-  <div class="section" style="margin: 50 0;">
+  <div class="section" style="margin-top: 50px;">
     <h3 style="text-align: center;">Pour accéder à l'interface et écouter le projet, cliquez <a style="display: inline;"
         href="interface.html">ici</a></h3>
   </div>
@@ -101,9 +103,22 @@
 
     </p>
 
+    <h4>Les différents acteurs du projet</h4>
+    <p>
+      Léo Huet
+      <br>
+      Claire Valotteau
+      <br>
+      Pierre Fleurence
+      <br>
+      Félix Rico
+      <br>
+      ainsi que les équipes du GMEM et du laboratoire DyNaMo.
+    </p>
+
     <h4>Mécasique a pris part à différents événements de médiation scientifique, d'informatique musicale, mais aussi
       d'ateliers de création :</h4>
-    <ul>
+    <ul style="font-weight: lighter;">
       <li>Souk des Sciences, événement de médiation scientifique, Aix-en-Provence, 2025</li>
       <li>EAC, ateliers de création art/science avec le GMEM, Marseille, 2025</li>
       <li>Pint of Science, événement de médiation scientifique, Marseille, 2024</li>
@@ -113,6 +128,13 @@
       <li>Fête de la science, événement de médiation scientifique, Marseille 2023</li>
       <li>Nuit Européenne des Chercheur.e.s, événement de médiation scientifique, Marseille, 2023</li>
     </ul>
+
+    <h4>Documentation autour du projet</h4>
+    <p>
+      Le projet Mécasique a été présenté lors des Journées d'Informatiques Musicales. 
+      Dans ce cadre, un article expliquant le projet, son déroulé, et les choix réalisés en terme de création sonore, a été publié. 
+      L'article, écrit en anglais, est disponible <a style="display: inline;" href="https://hal.science/JIM/hal-04608208v1" target="_blank">ici</a>.
+    </p>
   </div>
 
 
