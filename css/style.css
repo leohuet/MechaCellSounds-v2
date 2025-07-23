@@ -14,6 +14,10 @@ p{
     font-weight: lighter;
 }
 
+h2 {
+    padding-bottom: 20px;
+}
+
 a {
     text-decoration: underline;
     transition: opacity .2s;
@@ -39,7 +43,7 @@ li {
     animation: nav-scroll auto linear;
     animation-timeline: scroll();
     animation-range: 0vh 100vh;
-    background-color: aliceblue;
+    background-color: rgba(240, 248, 255, 0.824);
 }
 
 @keyframes nav-scroll {
@@ -47,7 +51,7 @@ li {
         background-color: transparent;
     }
     to {
-        background-color: aliceblue;
+        background-color: rgba(240, 248, 255, 0.824);
     }
 }
 
@@ -171,7 +175,6 @@ li {
     flex-direction: row;
     align-items: center;
     margin-bottom: 20px;
-    padding: 0 20px;
     justify-content: space-between;
 }
 
@@ -425,7 +428,7 @@ Menu déroulant
     animation: nav-scroll auto linear;
     animation-timeline: scroll();
     animation-range: 0vh 100vh;
-    background-color: aliceblue;
+    background-color: rgba(240, 248, 255, 0.824);
 }
 
 #sous li a{
