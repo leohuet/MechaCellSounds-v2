@@ -303,12 +303,24 @@ Carousel part
     top: 0;
     width: 100%;
     display: flex;
-    font-size: 20px;
     justify-content: center;
     align-items: center;
     color: rgb(255, 255, 255);
     background: rgba(0, 0, 0, 0.3);
-    height: 35px;
+}
+
+@media (max-width: 1000px) {
+    .image-text {
+        font-size: 14px;
+        height: 40px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .image-text {
+        font-size: 16px;
+        height: 35px;
+    }
 }
 
 .carousel-img-on {
