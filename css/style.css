@@ -166,6 +166,10 @@ li {
     padding-top: 50px;
 }
 
+#photos {
+    padding: 50 0;
+}
+
 #infos {
     padding-top: 50px;
 }
@@ -174,7 +178,7 @@ li {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 20px;
+    margin: 40 0;
     justify-content: space-between;
 }
 
@@ -294,6 +298,7 @@ Carousel part
 }
 
 .image-text {
+    opacity: 0;
     position: absolute;
     top: 0;
     width: 100%;
@@ -349,6 +354,74 @@ Carousel part
 
 #slider_nav-1 {
     display: none;
+}
+
+#slide-4 {
+    background-image: url('../media/pics/website/Souk_1.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-5 {
+    background-image: url('../media/pics/website/fete_science_IMG_2658.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-6 {
+    background-image: url('../media/pics/website/nuit_chercheurs_P1088351.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-7 {
+    background-image: url('../media/pics/website/SIW_science\ booth_158.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-8 {
+    background-image: url('../media/pics/website/fete_science_IMG_2662.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-9 {
+    background-image: url('../media/pics/website/nuit_chercheur_P1088403.jpg');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-10 {
+    background-image: url('../media/pics/website/eac_record.JPG');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+#slide-11 {
+    background-image: url('../media/pics/website/nuit_chercheurs_P1088372.JPG');
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+
+#slider-3 {
+    height: 85%;
+}
+
+#slider-3:hover > #slider-3-arrows{
+    opacity: 1;
+    transition: all .2s;
+
+}
+
+#slider-3:hover > .slider-carousel .images .image-text{
+    opacity: 1;
+    transition: all .2s;
+}
+
+#slider-3-arrows {
+    opacity: 0;
 }
 
 
