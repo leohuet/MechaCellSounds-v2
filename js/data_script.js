@@ -122,7 +122,7 @@ function filter_data(){
 		beta_mins.push(beta_min);
 	}
 	
-	// Get the min and max values from all cells and output it to the max patch
+	// Get the min and max values from all cells
 	let the_emodulus_min = Math.min.apply(null, emodulus_mins);
 	let the_emodulus_max = Math.max.apply(null, emodulus_maxs);
 	let the_beta_min = Math.min.apply(null, beta_mins);
@@ -189,7 +189,7 @@ async function init(){
         for(var j=0; j < data.length; j++){
             D_dict['Zc_array'][j] = parseFloat(data[j]['Zc']);
             D_dict['E0Tn_array'][j] = data[j]['E0Tn'] >= 1 ? parseFloat(Math.log(data[j]['E0Tn']) / Math.log(10)) : 0;
-            D_dict['betaTn_array'][j] = parseFloat(data[j]['betaTn']);          
+            D_dict['betaTn_array'][j] = parseFloat(data[j]['betaTn']);
         }
 
         // Append the dictionnary to an array containing all the cells data
@@ -334,6 +334,7 @@ function sort_values(x, y, s){
     stiffness = moyenne_array[1].toFixed(3);
     viscosity = ((Math.sin((moyenne_array[2]*Math.PI)/2) * stiffness) / 0.35).toFixed(3);
     elasticity = (Math.cos((moyenne_array[2]*Math.PI)/2) * stiffness).toFixed(3);
+    console.log(elasticity);
 
 
 }
