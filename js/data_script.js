@@ -188,7 +188,7 @@ async function init(){
         // Split each line into 3 cells and assing them to the array
         for(var j=0; j < data.length; j++){
             D_dict['Zc_array'][j] = parseFloat(data[j]['Zc']);
-            D_dict['E0Tn_array'][j] = data[j]['E0Tn'] >= 1 ? parseFloat(Math.log(data[j]['E0Tn']) / Math.log(10)) : 0;
+            D_dict['E0Tn_array'][j] = data[j]['E0Tn'] >= 1 ? parseFloat(Math.log10(data[j]['E0Tn'])) : 0;
             D_dict['betaTn_array'][j] = parseFloat(data[j]['betaTn']);
         }
 
@@ -332,9 +332,9 @@ function sort_values(x, y, s){
     moyenne_array[2] = (moyenne_array[2] + 1)/2;
 
     stiffness = moyenne_array[1].toFixed(3);
+    console.log("stiffness: " + stiffness);
     viscosity = ((Math.sin((moyenne_array[2]*Math.PI)/2) * stiffness) / 0.35).toFixed(3);
     elasticity = (Math.cos((moyenne_array[2]*Math.PI)/2) * stiffness).toFixed(3);
-    console.log(elasticity);
 
 
 }
