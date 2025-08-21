@@ -94,7 +94,7 @@ function filter_data(){
 	for(var j=0; j<all_data.length; j++){
 		// Rebuild the arrays in the dict to re order the data into 2D arrays
 		var i = 0;
-        if("macrophage" in cells[j] && "monocyte" in cells[j]){
+        if(cells[j].indexOf("macrophage") > -1 || cells[j].indexOf("monocyte") > -1){
             for(var index=0; index < rows.length; index++){
                 var selected_row = rows[index];
                 i = 0;
@@ -114,7 +114,7 @@ function filter_data(){
                 }
             }
         }
-        else if("cancerous" in cells[j]){
+        else if(cells[j].indexOf("cancerous") > -1){
             for(var index=0; index < rows.length; index++){
                 var selected_row = rows[index];
                 i = 0;
