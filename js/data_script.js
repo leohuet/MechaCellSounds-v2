@@ -248,7 +248,8 @@ function calculVitesse(onoff, point){
 
 function points_distance(x, y, s){
 	// Get all the points around the xy input within a chosen distance
-	var distances = [0, Math.sqrt(2), Math.sqrt(2), Math.sqrt(8), Math.sqrt(8)];
+    var coeff = Math.ceil(64 / all_data[cell-1]['map_size']);
+	var distances = [0, Math.sqrt(2)*coeff, Math.sqrt(2)*coeff, Math.sqrt(8)*coeff, Math.sqrt(8)*coeff];
 	var center = 0;
 	var points = [];
 	if(s == 1 || s == 3){

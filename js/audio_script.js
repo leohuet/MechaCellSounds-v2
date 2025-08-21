@@ -397,7 +397,9 @@ function handleViscousLevels(values){
   }
 
   for(let i=0; i<viscousBuffers.length; i++){
-    viscousBuffers[i][3].pan.linearRampToValueAtTime(viscousBuffers[i][3].pan.value + values.viscosity*rnd2(), audioCtx.currentTime + 0.1);
+    let panValue = viscousBuffers[i][3].pan.value + values.viscosity*rnd2();
+    panValue = panValue <= 1 ? panValue : 1;
+    viscousBuffers[i][3].pan.linearRampToValueAtTime(panValue, audioCtx.currentTime + 0.1);
   }
 }
 
