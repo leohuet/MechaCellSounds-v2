@@ -9,12 +9,14 @@ var map_size = 0;
 var csvDone = new Array(cells.length).fill(false);
 
 let D_dict = {
+    'map_size': 0,
     'Zc_array': [],
     'E0Tn_array': [],
     'betaTn_array': [],
 }
 
 let DD_dict = {
+    'map_size': 0,
     'Zc_2D_array': [],
     'E0Tn_2D_array': [],
     'betaTn_2D_array': [],
@@ -88,83 +90,44 @@ async function readCSV(filePath) {
 
 
 function filter_data(){
-	// Go through all the data to retrieve min and max values for each cell
-	var beta_maxs = [];
-	var emodulus_maxs = [];
-	var beta_mins = [];
-	var emodulus_mins = [];
-
-	for(var i=0; i<all_data.length; i++){
-		var emodulus_max = all_data[i]['E0Tn_array'][0];
-		var emodulus_min = all_data[i]['E0Tn_array'][0];
-		for(var e=0; e<all_data[i]['E0Tn_array'].length; e++){
-			if(all_data[i]['E0Tn_array'][e] > emodulus_max){
-				emodulus_max = all_data[i]['E0Tn_array'][e];
-			}
-			if(all_data[i]['E0Tn_array'][e] < emodulus_min){
-				emodulus_min = all_data[i]['E0Tn_array'][e];
-			}
-		}
-		emodulus_maxs.push(emodulus_max);
-		emodulus_mins.push(emodulus_min);
-
-		var beta_max = all_data[i]['betaTn_array'][0];
-		var beta_min = all_data[i]['betaTn_array'][0];
-		for(var b=0; b<all_data[i]['betaTn_array'].length; b++){
-			if(all_data[i]['betaTn_array'][b] > beta_max){
-				beta_max = all_data[i]['betaTn_array'][b];
-			}
-			if(all_data[i]['betaTn_array'][b] < beta_min){
-				beta_min = all_data[i]['betaTn_array'][b];
-			}
-		}
-		beta_maxs.push(beta_max);
-		beta_mins.push(beta_min);
-	}
-	
-	// Get the min and max values from all cells
-	let the_emodulus_min = Math.min.apply(null, emodulus_mins);
-	let the_emodulus_max = Math.max.apply(null, emodulus_maxs);
-	let the_beta_min = Math.min.apply(null, beta_mins);
-	let the_beta_max = Math.max.apply(null, beta_maxs);
-
-    console.log(the_emodulus_min, the_emodulus_max, the_beta_min, the_beta_max);
-
     let temp_data = structuredClone(all_data);
-
-    // remap data between min and max values
-    for(var d=0; d<all_data.length; d++){
-        for(var a=0; a<(map_size*map_size); a++){
-            all_data[d]['E0Tn_array'][a] = (temp_data[d]['E0Tn_array'][a] - the_emodulus_min) / (the_emodulus_max - the_emodulus_min);
-            all_data[d]['betaTn_array'][a] = (temp_data[d]['betaTn_array'][a] - the_beta_min) / (the_beta_max - the_beta_min);
-        }
-    }
-
-    temp_data = structuredClone(all_data);
-	
 	for(var j=0; j<all_data.length; j++){
 		// Rebuild the arrays in the dict to re order the data into 2D arrays
 		var i = 0;
-		for(var index=0; index < rows.length; index++){
-			var selected_row = rows[index];
-			i = 0;
-			for(var y=0; y<map_size; y++){
-				if(y%2 == 0){
-					for(var x1=0; x1<map_size; x1++){
-						DD_dict[selected_row + '_2D_array'][x1][y] = temp_data[j][selected_row + '_array'][i];
-						i = i + 1;
-					}
-				}
-				else{
-					for(var x2=map_size-1; x2>=0; x2--){
-						DD_dict[selected_row + '_2D_array'][x2][y] = temp_data[j][selected_row + '_array'][i];
-						i = i + 1;
-					}
-				}
-			}
-		}
+        if("macrophage" in cells[j] && "monocyte" in cells[j]){
+            for(var index=0; index < rows.length; index++){
+                var selected_row = rows[index];
+                i = 0;
+                for(var y=0; y<temp_data[j]['map_size']; y++){
+                    if(y%2 == 0){
+                        for(var x1=0; x1<temp_data[j]['map_size']; x1++){
+                            DD_dict[selected_row + '_2D_array'][x1][y] = temp_data[j][selected_row + '_array'][i];
+                            i = i + 1;
+                        }
+                    }
+                    else{
+                        for(var x2=temp_data[j]['map_size']-1; x2>=0; x2--){
+                            DD_dict[selected_row + '_2D_array'][x2][y] = temp_data[j][selected_row + '_array'][i];
+                            i = i + 1;
+                        }
+                    }
+                }
+            }
+        }
+        else if("cancerous" in cells[j]){
+            for(var index=0; index < rows.length; index++){
+                var selected_row = rows[index];
+                i = 0;
+                for(var y=0; y<temp_data[j]['map_size']; y++){
+                    for(var x3=0; x2<temp_data[j]['map_size']; x3++){
+                        DD_dict[selected_row + '_2D_array'][x3][y] = temp_data[j][selected_row + '_array'][i];
+                        i = i + 1;
+                    }
+                }
+            }
+        }
 
-		// Replace the array into all_data to the 2Darray
+        // Replace the array into all_data to the 2Darray
 		all_data[j] = structuredClone(DD_dict);
 	}
 }
@@ -174,22 +137,24 @@ async function init(){
         // Read the csv file from the path in argument
         const filePath = `${fetch_url}/${cells[cell]}.csv`;
         const data = await readCSV(filePath);
-        map_size = Math.ceil(Math.sqrt(data.length));
+        D_dict['map_size'] = Math.ceil(Math.sqrt(data.length));
 
-        for(var index=0; index < rows.length; index++){
-            var selected_row = rows[index];
-            for(var x=0; x<map_size; x++){
-                DD_dict[selected_row + '_2D_array'][x] = [];	
-                for(var y=0; y<map_size; y++){
-                    DD_dict[selected_row + '_2D_array'][x][y] = 0;
-                }
-            }
-        }
         // Split each line into 3 cells and assing them to the array
         for(var j=0; j < data.length; j++){
             D_dict['Zc_array'][j] = parseFloat(data[j]['Zc']);
-            D_dict['E0Tn_array'][j] = data[j]['E0Tn'] >= 1 ? parseFloat(Math.log10(data[j]['E0Tn'])) : 0;
+            D_dict['E0Tn_array'][j] = parseFloat(data[j]['E0Tn']);
             D_dict['betaTn_array'][j] = parseFloat(data[j]['betaTn']);
+        }
+
+        DD_dict['map_size'] = D_dict['map_size'];
+        for(var index=0; index < rows.length; index++){
+            var selected_row = rows[index];
+            for(var x=0; x<D_dict['map_size']; x++){
+                DD_dict[selected_row + '_2D_array'][x] = [];
+                for(var y=0; y<D_dict['map_size']; y++){
+                    DD_dict[selected_row + '_2D_array'][x][y] = 0;
+                }
+            }
         }
 
         // Append the dictionnary to an array containing all the cells data
@@ -289,8 +254,8 @@ function points_distance(x, y, s){
 	if(s == 1 || s == 3){
 		center = 0.5;
 	}
-	for(var x1=0; x1<map_size; x1++){
-		for(var y1=0; y1<map_size; y1++){
+	for(var x1=0; x1<all_data[cell-1]['map_size']; x1++){
+		for(var y1=0; y1<all_data[cell-1]['map_size']; y1++){
 			var distance = Math.sqrt(Math.pow(x+center-x1, 2)+ Math.pow(y+center-y1, 2));
 			if(distance <= distances[s]){
 				points.push(x1);
@@ -303,8 +268,8 @@ function points_distance(x, y, s){
 
 function sort_values(x, y, s){
 	var addition = [0, 0, 0];
-    var new_x = Math.ceil(x*map_size);
-    var new_y = Math.ceil(y*-map_size+map_size);
+    var new_x = Math.ceil(x*all_data[cell-1]['map_size']);
+    var new_y = Math.ceil(y*-all_data[cell-1]['map_size']+all_data[cell-1]['map_size']);
 	var xys = points_distance(new_x, new_y, s);
 	// Retrieve the data at each point from xys array and add them in the addition array
 	for(var j=0; j<xys.length/2; j++){
